@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blazr.Core\Blazr.Core.csproj" />
+    <ProjectReference Include="..\Blazr.Demo.Database.Core\Blazr.Demo.Database.Core.csproj" />
+    <ProjectReference Include="..\Blazr.Demo.Database.Data\Blazr.Demo.Database.Data.csproj" />
+    <ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
+  </ItemGroup>
+
+</Project>

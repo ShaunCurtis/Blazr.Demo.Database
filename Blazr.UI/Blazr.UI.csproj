@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Components\InputControls\InputDataList.razor.cs" />
+    <Compile Remove="Components\InputControls\InputSelectDataList.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\InputControls\InputDataList.razor" />
+    <Content Remove="Components\InputControls\InputSelectDataList.razor" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blazr.Core\Blazr.Core.csproj" />
+    <ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\InputControls\" />
+  </ItemGroup>
+
+</Project>

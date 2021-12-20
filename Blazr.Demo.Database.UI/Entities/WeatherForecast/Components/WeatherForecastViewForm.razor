@@ -1,0 +1,38 @@
+﻿@*
+    /// ============================================================
+    /// Author: Shaun Curtis, Cold Elm Coders
+    /// License: Use And Donate
+    /// If you use it, donate something to a charity somewhere
+    /// ============================================================
+*@
+
+@namespace Blazr.Demo.Database.UI
+@inherits BaseViewForm
+
+<UILoader State="this.LoadState">
+    <FormViewTitle>
+        <h2>Weather Forecast Editor</h2>
+    </FormViewTitle>
+    <UIContainer Size=BootstrapSize.Fluid>
+        <UIFormRow>
+            <UIColumn Columns=12 MediumColumns=6>
+                <FormViewControl Label="Date" Value="this.viewService.EditModel.Date.ToShortDateString()" ControlType="typeof(InputReadOnlyText)" />
+            </UIColumn>
+            <UIColumn Columns=12 MediumColumns=6>
+                <FormViewControl Label="Temp &deg;C" Value="this.viewService.EditModel.TemperatureC" ControlType="typeof(InputReadOnlyText)" />
+            </UIColumn>
+        </UIFormRow>
+        <UIFormRow>
+            <UIColumn Columns=12>
+                <FormViewControl Label="Summary" Value="this.viewService.EditModel.Summary" ControlType="typeof(InputReadOnlyText)" />
+            </UIColumn>
+        </UIFormRow>
+    </UIContainer>
+    <UIContainer Size=BootstrapSize.Fluid>
+        <UIFormRow>
+            <UIColumn Columns=12 class="text-end">
+                <UIButton class="btn-dark" ClickEvent="this.Exit">Exit</UIButton>
+            </UIColumn>
+        </UIFormRow>
+    </UIContainer>
+</UILoader>
