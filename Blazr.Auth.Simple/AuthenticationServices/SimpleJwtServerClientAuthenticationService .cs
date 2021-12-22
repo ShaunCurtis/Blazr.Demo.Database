@@ -9,19 +9,19 @@ namespace Blazr.Auth
 {
     public class SimpleJwtServerClientAuthenticationService : BaseJwtClientAuthenticationService, IClientAuthenticationService
     {
-        private IJwtAuthenticationIssuer _authenticationProvider;
+        private IJwtAuthenticationIssuer _authenticationIssuer;
 
-        public SimpleJwtServerClientAuthenticationService(ILocalStorageService localStorageService, IJwtAuthenticationIssuer authenticationProvider)
+        public SimpleJwtServerClientAuthenticationService(ILocalStorageService localStorageService, IJwtAuthenticationIssuer authenticationIssuer)
             : base(localStorageService: localStorageService)
-            => _authenticationProvider = authenticationProvider;
+            => _authenticationIssuer = authenticationIssuer;
 
         protected override Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials)
-            => _authenticationProvider.GetAuthenticationTokenAsync(credentials);
+            => _authenticationIssuer.GetAuthenticationTokenAsync(credentials);
 
         protected override Task<SessionToken> ValidateTokenAsync(SessionToken sessionToken)
         {
             //TODO - need to check this is correct and returning a token for Validation.  Why not a bool?
-            var isValid = _authenticationProvider.TryValidateToken(sessionToken, out ClaimsPrincipal principal);
+            var isValid = _authenticationIssuer.TryValidateToken(sessionToken, out ClaimsPrincipal principal);
             return isValid
                 ? Task.FromResult(sessionToken)
                 : Task.FromResult(new SessionToken());
