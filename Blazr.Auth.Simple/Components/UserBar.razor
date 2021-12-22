@@ -1,0 +1,77 @@
+﻿@*/// ============================================================
+    /// Author: Shaun Curtis, Cold Elm Coders
+    /// License: Use And Donate
+    /// If you use it, donate something to a charity somewhere
+    /// ============================================================*@
+
+@implements IDisposable
+@namespace Blazr.Auth
+
+<span class="mr-2">Change User:</span>
+<div class="w-25">
+    <select id="userselect" class="form-control" @onchange="ChangeUser">
+        @foreach (var value in SimpleIdentities.IdentityList)
+        {
+            @if (value.Value == _currentUserName)
+            {
+                <option value="@value.Value" selected>@value.Value</option>
+            }
+            else
+            {
+                <option value="@value.Value">@value.Value</option>
+            }
+        }
+    </select>
+</div>
+<span class="text-nowrap ml-3">
+    <AuthorizeView>
+        <Authorized>
+            Hello, @this.user!.Identity!.Name
+        </Authorized>
+        <NotAuthorized>
+            Not Logged In
+        </NotAuthorized>
+    </AuthorizeView>
+</span>
+
+@code {
+
+    [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
+
+    [Inject] private AuthenticationStateProvider? AuthState { get; set; }
+
+    [Inject] private IClientAuthenticationService? ClientAuthenticationService { get; set; }
+
+    private System.Security.Claims.ClaimsPrincipal user = new ClaimsPrincipal();
+    private string _currentUserName = "None";
+
+    protected async override Task OnInitializedAsync()
+    {
+        var authState = await AuthTask!;
+        this.user = authState.User;
+        AuthState!.AuthenticationStateChanged += this.OnUserChanged;
+    }
+
+    private bool GetSelected(string value)
+        => user.Identity!.Name!.Equals(value, StringComparison.CurrentCultureIgnoreCase);
+
+    private async Task ChangeUser(ChangeEventArgs e)
+    {
+        _currentUserName = e.Value?.ToString() ?? string.Empty;
+        await ClientAuthenticationService!.LogInAsync(new IdentityLoginCredentials { UserName = _currentUserName });
+    }
+
+    private async void OnUserChanged(Task<AuthenticationState> state)
+        => await this.GetUser(state);
+
+    private async Task GetUser(Task<AuthenticationState> state)
+    {
+        var authState = await state;
+        this.user = authState.User;
+    }
+
+    public void Dispose()
+        => AuthState!.AuthenticationStateChanged -= this.OnUserChanged;
+
+}
+

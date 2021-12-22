@@ -1,17 +1,14 @@
-﻿/// ============================================================
-/// Author: Shaun Curtis, Cold Elm Coders
-/// License: Use And Donate
-/// If you use it, donate something to a charity somewhere
-/// ============================================================
-namespace Blazor.Auth.Simple.AuthenticationStateProviders
+﻿namespace Blazr.Auth
 {
-    public class SimpleAuthenticationStateProvider : AuthenticationStateProvider
+    public static class SimpleIdentities
     {
-        private ClaimsPrincipal _currentIdentity = Anon;
-
         public static readonly Guid VisitorId = Guid.Parse("10000000-0000-0000-0000-000000000001");
         public static readonly Guid UserId = Guid.Parse("10000000-0000-0000-0000-000000000002");
         public static readonly Guid AdminId = Guid.Parse("10000000-0000-0000-0000-000000000003");
+
+        public static readonly string VisitorName = "Visitor";
+        public static readonly string UserName = "Normal User";
+        public static readonly string AdminName = "Administrator";
 
         public static ClaimsPrincipal Anon
             => new ClaimsPrincipal(new ClaimsIdentity(Array.Empty<Claim>(), ""));
@@ -22,7 +19,7 @@ namespace Blazor.Auth.Simple.AuthenticationStateProviders
         public static Claim[] UserClaims
             => new[]{
                     new Claim(ClaimTypes.Sid, UserId.ToString()),
-                    new Claim(ClaimTypes.Name, "Normal User"),
+                    new Claim(ClaimTypes.Name, UserName),
                     new Claim(ClaimTypes.NameIdentifier, "Normal User"),
                     new Claim(ClaimTypes.Email, "user@me.com"),
                     new Claim(ClaimTypes.Role, "User")
@@ -34,7 +31,7 @@ namespace Blazor.Auth.Simple.AuthenticationStateProviders
         public static Claim[] VisitorClaims
             => new[]{
                     new Claim(ClaimTypes.Sid, VisitorId.ToString()),
-                    new Claim(ClaimTypes.Name, "Visitor"),
+                    new Claim(ClaimTypes.Name, VisitorName),
                     new Claim(ClaimTypes.NameIdentifier, "Normal Visitor"),
                     new Claim(ClaimTypes.Email, "visitor@me.com"),
                     new Claim(ClaimTypes.Role, "Visitor")
@@ -46,35 +43,21 @@ namespace Blazor.Auth.Simple.AuthenticationStateProviders
         public static Claim[] AdminClaims
             => new[]{
                     new Claim(ClaimTypes.Sid, AdminId.ToString()),
-                    new Claim(ClaimTypes.Name, "Administrator"),
+                    new Claim(ClaimTypes.Name, AdminName),
                     new Claim(ClaimTypes.NameIdentifier, "Administrator"),
                     new Claim(ClaimTypes.Email, "admin@me.com"),
                     new Claim(ClaimTypes.Role, "Admin")
             };
 
-
-        public override Task<AuthenticationState> GetAuthenticationStateAsync()
-            => Task.FromResult(new AuthenticationState(_currentIdentity));
-
-        public Task<AuthenticationState> ChangeIdentity(Guid id)
-        {
-            var identity = Identities[id];
-            _currentIdentity = identity ?? Anon;
-            var task = GetAuthenticationStateAsync();
-            NotifyAuthenticationStateChanged(task);
-            return task;
-        }
-
-        public static Dictionary<Guid, ClaimsPrincipal> Identities
-            => new Dictionary<Guid, ClaimsPrincipal>()
+        public static Dictionary<string, ClaimsPrincipal> IdentityCollection
+            => new Dictionary<string, ClaimsPrincipal>()
             {
-                {Guid.Empty, Anon},
-                {VisitorId, Visitor},
-                {UserId, User },
-                {AdminId, Admin }
+                        {VisitorName, Visitor},
+                        {UserName, User },
+                        {AdminName, Admin }
             };
 
-        public static Dictionary<Guid, string> TestIdentities =>
+        public static Dictionary<Guid, string> IdentityList =>
             new Dictionary<Guid, string>()
             {
                 {Guid.Empty, "Logged Out" },
@@ -82,5 +65,12 @@ namespace Blazor.Auth.Simple.AuthenticationStateProviders
                 {UserId, "Normal User" },
                 {AdminId, "Admin" }
             };
+
+        public static bool TryGetIdentity(IdentityLoginCredentials userCredentials, out ClaimsPrincipal identity)
+        {
+            var result = IdentityCollection[userCredentials.UserName];
+            identity = result ?? Anon;
+            return result is not null;
+        }
     }
 }

@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Demo.Database.Server.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Demo.Database.Controllers", "Blazr.Demo.Database.Controllers\Blazr.Demo.Database.Controllers.csproj", "{26AE81C6-7948-4426-95FB-424CDD4ACF64}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.Auth.Simple", "Blazor.Auth.Simple\Blazor.Auth.Simple.csproj", "{416F3232-E022-40E7-A39B-E1063F8D7D7D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Auth.Simple", "Blazr.Auth.Simple\Blazr.Auth.Simple.csproj", "{416F3232-E022-40E7-A39B-E1063F8D7D7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

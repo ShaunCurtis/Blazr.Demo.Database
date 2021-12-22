@@ -4,15 +4,20 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
+using Blazr.Auth;
 using Blazr.Demo.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
 var services = builder.Services;
-services.AddAppBlazorServerServices();
+{
+    services.AddRazorPages();
+    services.AddServerSideBlazor();
+    services.AddAppBlazorServerServices();
+    services.AddSimpleJwtAuthentication();
+    services.Configure<JwtTokenSetup>(builder.Configuration.GetSection("JwtTokenSetup"));
+}
 
 var app = builder.Build();
 
