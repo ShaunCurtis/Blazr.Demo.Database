@@ -1,10 +1,12 @@
-﻿/// ============================================================
+﻿
+
+using Blazr.Auth;
+using System.Net.Http.Headers;
+/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
-
 namespace Blazr.Demo.Database.Data
 {
     /// <summary>
@@ -14,12 +16,15 @@ namespace Blazr.Demo.Database.Data
     public class WeatherForecastAPIDataBroker : IWeatherForecastDataBroker
     {
         private readonly HttpClient? httpClient;
+        private readonly IClientAuthenticationService clientAuthenticationService;
 
         public WeatherForecastAPIDataBroker(HttpClient httpClient)
             => this.httpClient = httpClient!;
 
         public async ValueTask<bool> AddForecastAsync(DcoWeatherForecast record)
         {
+            this.httpClient!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
             var response = await this.httpClient!.PostAsJsonAsync<DcoWeatherForecast>($"/api/weatherforecast/add", record);
             var result = await response.Content.ReadFromJsonAsync<bool>();
             return result;

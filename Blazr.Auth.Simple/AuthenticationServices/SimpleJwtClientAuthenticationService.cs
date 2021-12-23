@@ -25,15 +25,24 @@ public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationS
         return newSessionToken ?? new SessionToken();
     }
 
-    protected override async Task<SessionToken> ValidateTokenAsync(SessionToken sessionToken)
+    protected override async Task<bool> ValidateTokenAsync(SessionToken sessionToken)
     {
-        SessionToken? newSessionToken = null;
+        bool isvalidated = false;
         var response = await _httpClient.PostAsJsonAsync<SessionToken>(AppConstants.ValidateUrl, sessionToken);
         if (response.IsSuccessStatusCode)
-            newSessionToken = await response.Content.ReadFromJsonAsync<SessionToken>();
+            isvalidated = await response.Content.ReadFromJsonAsync<bool>();
 
-        this.LogProcess(sessionToken, newSessionToken);
-        return newSessionToken ?? new SessionToken();
+        this.LogProcess(sessionToken, isvalidated);
+        return isvalidated;
+    }
+    private void LogProcess(SessionToken sessionToken, bool isValidated)
+    {
+        var label = "==> Client";
+        if (isValidated)
+            Console.WriteLine($"{label} - Validated - {sessionToken.SessionId}.");
+
+        else
+            Console.WriteLine($"{label} - Validation failed  - {sessionToken.SessionId}.");
     }
 
     private void LogProcess(SessionToken sessionToken, SessionToken? newSessionToken)

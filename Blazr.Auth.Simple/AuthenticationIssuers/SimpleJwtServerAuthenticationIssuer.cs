@@ -76,6 +76,5 @@ namespace Blazr.Auth
 
             return isValid;
         }
-
     }
 }

@@ -36,6 +36,6 @@ namespace Blazr.Auth
 
         protected abstract Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials);
 
-        protected abstract Task<SessionToken> ValidateTokenAsync(SessionToken sessionToken);
+        protected abstract Task<bool> ValidateTokenAsync(SessionToken sessionToken);
     }
 }

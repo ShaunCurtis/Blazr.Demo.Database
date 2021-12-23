@@ -18,13 +18,7 @@ namespace Blazr.Auth
         protected override Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials)
             => _authenticationIssuer.GetAuthenticationTokenAsync(credentials);
 
-        protected override Task<SessionToken> ValidateTokenAsync(SessionToken sessionToken)
-        {
-            //TODO - need to check this is correct and returning a token for Validation.  Why not a bool?
-            var isValid = _authenticationIssuer.TryValidateToken(sessionToken, out ClaimsPrincipal principal);
-            return isValid
-                ? Task.FromResult(sessionToken)
-                : Task.FromResult(new SessionToken());
-        }
+        protected override Task<bool> ValidateTokenAsync(SessionToken sessionToken)
+            => Task.FromResult(_authenticationIssuer.TryValidateToken(sessionToken));
     }
 }
