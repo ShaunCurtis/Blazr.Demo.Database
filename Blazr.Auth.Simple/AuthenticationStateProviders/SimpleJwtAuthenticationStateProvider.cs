@@ -39,6 +39,11 @@ public class SimpleJwtAuthenticationStateProvider : AuthenticationStateProvider,
             this.NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(e.Identity)));
     }
 
+    public void NotifyStateChanged(ClaimsPrincipal principal)
+    {
+        this.NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
+    }
+
     public void Dispose()
         => _clientAuthenticationService.AuthenticationChanged -= this.OnAuthenticationChanged;
 

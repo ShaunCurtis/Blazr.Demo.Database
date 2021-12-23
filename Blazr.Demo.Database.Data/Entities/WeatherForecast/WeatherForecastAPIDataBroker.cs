@@ -18,12 +18,16 @@ namespace Blazr.Demo.Database.Data
         private readonly HttpClient? httpClient;
         private readonly IClientAuthenticationService clientAuthenticationService;
 
-        public WeatherForecastAPIDataBroker(HttpClient httpClient)
-            => this.httpClient = httpClient!;
+        public WeatherForecastAPIDataBroker(HttpClient httpClient, IClientAuthenticationService clientAuthenticationService)
+        {
+            this.httpClient = httpClient!;
+            this.clientAuthenticationService = clientAuthenticationService;
+        }
 
         public async ValueTask<bool> AddForecastAsync(DcoWeatherForecast record)
         {
-            this.httpClient!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+            var token = await this.clientAuthenticationService.GetCurrentSessionTokenAsync();
+            this.httpClient!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.JwtToken);
 
             var response = await this.httpClient!.PostAsJsonAsync<DcoWeatherForecast>($"/api/weatherforecast/add", record);
             var result = await response.Content.ReadFromJsonAsync<bool>();

@@ -61,9 +61,9 @@
             new Dictionary<Guid, string>()
             {
                 {Guid.Empty, "Logged Out" },
-                {VisitorId, "Visitor" },
-                {UserId, "Normal User" },
-                {AdminId, "Admin" }
+                {VisitorId, VisitorName },
+                {UserId, UserName },
+                {AdminId, AdminName }
             };
 
         public static bool TryGetIdentity(IdentityLoginCredentials userCredentials, out ClaimsPrincipal identity)

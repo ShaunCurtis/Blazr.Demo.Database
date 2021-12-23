@@ -8,15 +8,9 @@ namespace Blazr.Auth
 {
     public abstract class BaseJwtClientAuthenticationService : IClientAuthenticationService
     {
-        protected ILocalStorageService? _localStorageService;
-        protected ILocalStorageService localStorageService => _localStorageService!;
-
         protected SessionToken _sessionToken = new SessionToken();
 
         public event EventHandler<AuthenticationChangedEventArgs>? AuthenticationChanged;
-
-        public BaseJwtClientAuthenticationService(ILocalStorageService localStorageService)
-            => _localStorageService = localStorageService;
 
         public async Task<bool> LogInAsync(IdentityLoginCredentials credentials)
         {
