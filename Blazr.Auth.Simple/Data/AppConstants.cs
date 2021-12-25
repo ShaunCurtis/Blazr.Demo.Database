@@ -4,18 +4,18 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-namespace Blazr.Auth
+namespace Blazr.Auth;
+
+public static class AppConstants
 {
-    public static class AppConstants
-    {
-        public const string LogInUrl = "/api/authenticate/login-jwttoken";
+    public const string LogInUrl = "/api/authenticate/login-jwttoken";
 
-        public const string RefreshUrl = "/api/authenticate/refresh-jwttoken";
+    public const string RefreshUrl = "/api/authenticate/refresh-jwttoken";
 
-        public const string ValidateUrl = "/api/authenticate/validate-jwttoken";
+    public const string ValidateUrl = "/api/authenticate/validate-jwttoken";
 
-        public const string JwtTokenLabel = "JwtToken";
+    public const string JwtTokenLabel = "JwtToken";
 
-        public const string AuthenticationType = "CEC JWT Issuer";
-    }
+    public static string AuthenticationType => SimpleIdentityStore.AuthenticationType;
 }
+

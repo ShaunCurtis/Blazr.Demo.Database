@@ -16,7 +16,7 @@ namespace Blazr.Auth
         {
             var sessionToken = await this.GetTokenAsync(credentials);
             _sessionToken = sessionToken;
-            return true;
+            return sessionToken.IsAuthenticated;
         }
 
         public Task<bool> LogOutAsync()
@@ -27,6 +27,9 @@ namespace Blazr.Auth
 
         public Task<SessionToken> GetCurrentSessionTokenAsync()
             => Task.FromResult(_sessionToken);
+
+        protected void NotifyAuthenticationChanged(ClaimsPrincipal identity)
+            => this.AuthenticationChanged?.Invoke(this, AuthenticationChangedEventArgs.NewAuthenticationChangedEventArgs(identity));
 
         protected abstract Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials);
 

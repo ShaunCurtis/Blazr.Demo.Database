@@ -10,7 +10,7 @@
 <span class="mr-2">Change User:</span>
 <div class="w-25">
     <select id="userselect" class="form-control" @onchange="ChangeUser">
-        @foreach (var value in SimpleIdentities.IdentityList)
+        @foreach (var value in SimpleIdentityStore.IdentityList)
         {
             @if (value.Value == _currentUserName)
             {
@@ -23,7 +23,7 @@
         }
     </select>
 </div>
-<span class="text-nowrap ml-3">
+<span class="text-nowrap ms-3">
     <AuthorizeView>
         <Authorized>
             Hello, @this.user!.Identity!.Name

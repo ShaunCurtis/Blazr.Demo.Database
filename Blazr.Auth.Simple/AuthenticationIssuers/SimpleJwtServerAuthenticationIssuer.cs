@@ -28,10 +28,11 @@ namespace Blazr.Auth
         /// <returns>Either valid SessionToken if authentication is successful or an empty SessionToken</returns>
         public Task<SessionToken> GetAuthenticationTokenAsync(IdentityLoginCredentials userCredentials)
         {
+            var sessionToken = new SessionToken();
+            var isAuthenticated = SimpleIdentityStore.TryGetIdentity(userCredentials, out ClaimsPrincipal? identity);
 
-            var isAuthenticated = SimpleIdentities.TryGetIdentity(userCredentials, out ClaimsPrincipal identity);
-
-            var sessionToken = SessionTokenManagement.GetNewSessionToken(identity.Claims.ToArray(), _jwtTokenSetup);
+            if (isAuthenticated)
+                sessionToken = SessionTokenManagement.GetNewSessionToken(identity!.Claims.ToArray(), _jwtTokenSetup);
 
             Debug.WriteLine(
                 isAuthenticated

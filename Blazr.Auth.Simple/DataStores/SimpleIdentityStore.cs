@@ -1,20 +1,23 @@
 ﻿namespace Blazr.Auth
 {
-    public static class SimpleIdentities
+    public static class SimpleIdentityStore
     {
         public static readonly Guid VisitorId = Guid.Parse("10000000-0000-0000-0000-000000000001");
         public static readonly Guid UserId = Guid.Parse("10000000-0000-0000-0000-000000000002");
         public static readonly Guid AdminId = Guid.Parse("10000000-0000-0000-0000-000000000003");
 
+        public static readonly string AnonName = "Logged Out";
         public static readonly string VisitorName = "Visitor";
         public static readonly string UserName = "Normal User";
         public static readonly string AdminName = "Administrator";
+
+        public static readonly string AuthenticationType = "Simple JWT Authentication";
 
         public static ClaimsPrincipal Anon
             => new ClaimsPrincipal(new ClaimsIdentity(Array.Empty<Claim>(), ""));
 
         public static ClaimsPrincipal User
-            => new ClaimsPrincipal(new ClaimsIdentity(UserClaims, "Simple Auth Type"));
+            => new ClaimsPrincipal(new ClaimsIdentity(UserClaims, AuthenticationType));
 
         public static Claim[] UserClaims
             => new[]{
@@ -26,7 +29,7 @@
             };
 
         public static ClaimsPrincipal Visitor
-            => new ClaimsPrincipal(new ClaimsIdentity(VisitorClaims, "Simple Auth Type"));
+            => new ClaimsPrincipal(new ClaimsIdentity(VisitorClaims, AuthenticationType));
 
         public static Claim[] VisitorClaims
             => new[]{
@@ -38,7 +41,7 @@
             };
 
         public static ClaimsPrincipal Admin
-            => new ClaimsPrincipal(new ClaimsIdentity(AdminClaims, "Simple Auth Type"));
+            => new ClaimsPrincipal(new ClaimsIdentity(AdminClaims, AuthenticationType));
 
         public static Claim[] AdminClaims
             => new[]{
@@ -68,9 +71,11 @@
 
         public static bool TryGetIdentity(IdentityLoginCredentials userCredentials, out ClaimsPrincipal identity)
         {
-            var result = IdentityCollection[userCredentials.UserName];
-            identity = result ?? Anon;
-            return result is not null;
+            var isValid = IdentityCollection.ContainsKey(userCredentials.UserName);
+            identity = isValid
+                ? IdentityCollection[userCredentials.UserName]
+                : new ClaimsPrincipal(); 
+            return isValid;
         }
     }
 }

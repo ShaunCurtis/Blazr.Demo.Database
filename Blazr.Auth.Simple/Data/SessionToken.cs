@@ -15,7 +15,7 @@ namespace Blazr.Auth
     {
         public Guid SessionId { get; init; } = Guid.NewGuid();
 
-        public string? JwtToken { get; init; } = null;
+        public string JwtToken { get; init; } = string.Empty;
 
         public bool IsAuthenticated { get; init; }
 

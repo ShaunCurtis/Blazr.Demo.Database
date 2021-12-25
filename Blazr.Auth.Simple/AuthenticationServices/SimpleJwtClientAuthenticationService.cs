@@ -7,12 +7,14 @@
 
 namespace Blazr.Auth;
 
+/// <summary>
+/// JWT Service that uses the API Controller for Authentication
+/// </summary>
 public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationService, IClientAuthenticationService
 {
     protected HttpClient _httpClient;
 
-    public SimpleJwtClientAuthenticationService(ILocalStorageService localStorageService, HttpClient httpClient)
-        : base(localStorageService: localStorageService)
+    public SimpleJwtClientAuthenticationService(HttpClient httpClient)
         => _httpClient = httpClient;
 
     protected override async Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials)
@@ -21,6 +23,12 @@ public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationS
         var response = await _httpClient.PostAsJsonAsync<IdentityLoginCredentials>(AppConstants.LogInUrl, credentials);
         if (response.IsSuccessStatusCode)
             newSessionToken = await response.Content.ReadFromJsonAsync<SessionToken>();
+
+        if (newSessionToken != null)
+        {
+            SessionTokenManagement.TryGetFromJwt(newSessionToken.JwtToken, SimpleIdentityStore.AuthenticationType, out ClaimsPrincipal identity);
+            this.NotifyAuthenticationChanged(identity);
+        }
         this.LogProcess(credentials, newSessionToken);
         return newSessionToken ?? new SessionToken();
     }
@@ -35,6 +43,7 @@ public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationS
         this.LogProcess(sessionToken, isvalidated);
         return isvalidated;
     }
+
     private void LogProcess(SessionToken sessionToken, bool isValidated)
     {
         var label = "==> Client";
@@ -43,25 +52,6 @@ public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationS
 
         else
             Console.WriteLine($"{label} - Validation failed  - {sessionToken.SessionId}.");
-    }
-
-    private void LogProcess(SessionToken sessionToken, SessionToken? newSessionToken)
-    {
-        var label = "==> Client";
-        if (newSessionToken is null)
-            Console.WriteLine($"{label} - Not Validated - No Session Token returned.");
-
-        else if (newSessionToken.IsEmpty)
-            Console.WriteLine($"{label} - Not Validated Empty Session Token returned.");
-
-        else if (sessionToken is not null)
-            Console.WriteLine(
-                newSessionToken == sessionToken
-                ? $"{label} - Validated Session Token - {sessionToken.SessionId}."
-                : $"{label} - Validated Session Token - {sessionToken.SessionId} - Expired - New Token Issued - {newSessionToken.SessionId}."
-                );
-        else
-            Console.WriteLine($"{label} - Attempt made to log null Session Tokens.");
     }
 
     private void LogProcess(IdentityLoginCredentials credentials, SessionToken? newSessionToken)

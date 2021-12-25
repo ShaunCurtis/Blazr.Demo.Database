@@ -8,7 +8,7 @@
 namespace Blazr.Auth;
 
 /// <summary>
-/// Authentication State Provider that gets the state from local storage
+/// Authentication State Provider that uses JWT tokens 
 /// </summary>
 public class SimpleJwtAuthenticationStateProvider : AuthenticationStateProvider, IDisposable
 {
@@ -37,11 +37,6 @@ public class SimpleJwtAuthenticationStateProvider : AuthenticationStateProvider,
     {
         if (e.Identity is not null)
             this.NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(e.Identity)));
-    }
-
-    public void NotifyStateChanged(ClaimsPrincipal principal)
-    {
-        this.NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
     }
 
     public void Dispose()
