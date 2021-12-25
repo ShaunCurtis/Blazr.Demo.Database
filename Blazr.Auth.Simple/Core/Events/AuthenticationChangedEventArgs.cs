@@ -5,7 +5,7 @@
 /// ============================================================
 
 
-namespace Blazr.Auth;
+namespace Blazr.Auth.Core;
 
 public class AuthenticationChangedEventArgs : EventArgs
 {

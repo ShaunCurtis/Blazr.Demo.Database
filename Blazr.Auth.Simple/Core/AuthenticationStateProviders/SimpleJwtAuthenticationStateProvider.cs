@@ -5,7 +5,7 @@
 /// ============================================================
 
 
-namespace Blazr.Auth;
+namespace Blazr.Auth.Core;
 
 /// <summary>
 /// Authentication State Provider that gets the state from local storage

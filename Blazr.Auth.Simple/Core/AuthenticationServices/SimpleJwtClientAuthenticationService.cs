@@ -5,14 +5,13 @@
 /// ============================================================
 
 
-namespace Blazr.Auth;
+namespace Blazr.Auth.Core;
 
 public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationService, IClientAuthenticationService
 {
     protected HttpClient _httpClient;
 
     public SimpleJwtClientAuthenticationService(ILocalStorageService localStorageService, HttpClient httpClient)
-        : base(localStorageService: localStorageService)
         => _httpClient = httpClient;
 
     protected override async Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials)
