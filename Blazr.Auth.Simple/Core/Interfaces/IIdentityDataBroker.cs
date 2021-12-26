@@ -8,6 +8,6 @@ namespace Blazr.Auth.Core;
 
 public interface IIdentityDataBroker
 {
-    public bool TryGetIdentity(IdentityLoginCredentials userCredentials, out ClaimsPrincipal identity);
+    public Task<ClaimsPrincipal> GetIdentityAsync(IdentityLoginCredentials userCredentials);
 }
 

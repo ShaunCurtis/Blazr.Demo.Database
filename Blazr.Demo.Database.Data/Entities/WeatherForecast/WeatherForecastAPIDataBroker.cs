@@ -1,12 +1,11 @@
-﻿
-
-using Blazr.Auth;
-using System.Net.Http.Headers;
-/// ============================================================
+﻿/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
+
+using Blazr.Auth.Core;
+using System.Net.Http.Headers;
 namespace Blazr.Demo.Database.Data
 {
     /// <summary>

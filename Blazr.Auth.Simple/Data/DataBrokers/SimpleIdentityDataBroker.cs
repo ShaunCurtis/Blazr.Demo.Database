@@ -15,7 +15,7 @@ public class SimpleIdentityDataBroker : IIdentityDataBroker
     public SimpleIdentityDataBroker(SimpleIdentityStore simpleIdentityStore)
         => _simpleIdentityStore = simpleIdentityStore;
 
-    public bool TryGetIdentity(IdentityLoginCredentials userCredentials, out ClaimsPrincipal identity)
-        => _simpleIdentityStore.TryGetIdentity(userCredentials, out identity);
+    public Task<ClaimsPrincipal> GetIdentityAsync(IdentityLoginCredentials userCredentials)
+        => _simpleIdentityStore.GetIdentityAsync(userCredentials);
 }
 

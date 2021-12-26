@@ -4,21 +4,20 @@
     /// If you use it, donate something to a charity somewhere
     /// ============================================================*@
 
+@namespace Blazr.Auth.UI
 @implements IDisposable
-@namespace Blazr.Auth
-
-<span class="mr-2">Change User:</span>
+<span class="me-2">Change User:</span>
 <div class="w-25">
     <select id="userselect" class="form-control" @onchange="ChangeUser">
-        @foreach (var value in SimpleIdentityStore.IdentityList)
+        @foreach (var kv in SimpleAuthenticationStateProvider.TestIdentities)
         {
-            @if (value.Value == _currentUserName)
+            @if (kv.Key.Equals(_userId))
             {
-                <option value="@value.Value" selected>@value.Value</option>
+                 <option value="@kv.Key" selected>@kv.Value</option>
             }
             else
             {
-                <option value="@value.Value">@value.Value</option>
+                <option value="@kv.Key">@kv.Value</option>
             }
         }
     </select>
@@ -26,7 +25,7 @@
 <span class="text-nowrap ms-3">
     <AuthorizeView>
         <Authorized>
-            Hello, @this.user!.Identity!.Name
+            Hello, @(context.User.Identity?.Name ?? string.Empty)
         </Authorized>
         <NotAuthorized>
             Not Logged In
@@ -34,31 +33,33 @@
     </AuthorizeView>
 </span>
 
+
 @code {
 
     [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
 
-    [Inject] private AuthenticationStateProvider? AuthState { get; set; }
+    [Inject] private AuthenticationStateProvider? AuthStateProvider { get; set; }
 
-    [Inject] private IClientAuthenticationService? ClientAuthenticationService { get; set; }
+    private SimpleAuthenticationStateProvider? _simpleAuthProvider => this.AuthStateProvider as SimpleAuthenticationStateProvider;
 
-    private System.Security.Claims.ClaimsPrincipal user = new ClaimsPrincipal();
-    private string _currentUserName = "None";
+    private System.Security.Claims.ClaimsPrincipal? user;
+
+    private Guid _userId = Guid.Empty;
 
     protected async override Task OnInitializedAsync()
     {
         var authState = await AuthTask!;
         this.user = authState.User;
-        AuthState!.AuthenticationStateChanged += this.OnUserChanged;
+        AuthStateProvider!.AuthenticationStateChanged += this.OnUserChanged;
     }
 
-    private bool GetSelected(string value)
-        => user.Identity!.Name!.Equals(value, StringComparison.CurrentCultureIgnoreCase);
-
-    private async Task ChangeUser(ChangeEventArgs e)
+    private void ChangeUser(ChangeEventArgs e)
     {
-        _currentUserName = e.Value?.ToString() ?? string.Empty;
-        await ClientAuthenticationService!.LogInAsync(new IdentityLoginCredentials { UserName = _currentUserName });
+        if (Guid.TryParse(e.Value?.ToString(), out Guid Id))
+        {
+            _userId = Id;
+            _simpleAuthProvider?.ChangeIdentity(Id);
+        }
     }
 
     private async void OnUserChanged(Task<AuthenticationState> state)
@@ -71,7 +72,5 @@
     }
 
     public void Dispose()
-        => AuthState!.AuthenticationStateChanged -= this.OnUserChanged;
-
+        => AuthStateProvider!.AuthenticationStateChanged -= this.OnUserChanged;
 }
-

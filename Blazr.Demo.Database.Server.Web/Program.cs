@@ -5,6 +5,7 @@
 /// ============================================================
 
 using Blazr.Auth;
+using Blazr.Auth.Core;
 using Blazr.Demo.Database;
 
 var builder = WebApplication.CreateBuilder(args);

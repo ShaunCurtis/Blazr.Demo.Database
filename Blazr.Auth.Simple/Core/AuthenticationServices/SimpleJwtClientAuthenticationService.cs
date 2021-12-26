@@ -11,7 +11,7 @@ public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationS
 {
     protected HttpClient _httpClient;
 
-    public SimpleJwtClientAuthenticationService(ILocalStorageService localStorageService, HttpClient httpClient)
+    public SimpleJwtClientAuthenticationService(HttpClient httpClient)
         => _httpClient = httpClient;
 
     protected override async Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials)

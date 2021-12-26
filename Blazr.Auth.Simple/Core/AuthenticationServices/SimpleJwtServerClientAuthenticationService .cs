@@ -11,7 +11,7 @@ namespace Blazr.Auth.Core;
     {
         private IJwtAuthenticationIssuer _authenticationIssuer;
 
-        public SimpleJwtServerClientAuthenticationService(ILocalStorageService localStorageService, IJwtAuthenticationIssuer authenticationIssuer)
+        public SimpleJwtServerClientAuthenticationService(IJwtAuthenticationIssuer authenticationIssuer)
             => _authenticationIssuer = authenticationIssuer;
 
         protected override Task<SessionToken> GetTokenAsync(IdentityLoginCredentials credentials)

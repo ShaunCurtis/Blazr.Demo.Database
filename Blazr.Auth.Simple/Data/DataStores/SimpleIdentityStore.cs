@@ -10,11 +10,7 @@ namespace Blazr.Auth.Data;
 
 public class SimpleIdentityStore
 {
-    public bool TryGetIdentity(IdentityLoginCredentials userCredentials, out ClaimsPrincipal identity)
-    {
-        var result = TestIdentities.IdentityIdCollection[userCredentials.Id];
-        identity = result ?? new ClaimsPrincipal();
-        return result is not null;
-    }
+    public Task<ClaimsPrincipal> GetIdentityAsync(IdentityLoginCredentials userCredentials)
+        => Task.FromResult(TestIdentities.IdentityIdCollection[userCredentials.Id] ??  new ClaimsPrincipal());
 }
 

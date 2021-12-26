@@ -5,6 +5,8 @@
 /// ============================================================
 
 using Microsoft.Extensions.DependencyInjection;
+using Blazr.Auth.Core;
+using Blazr.Auth.Data;
 
 namespace Blazr.Auth;
 
@@ -18,10 +20,11 @@ public static class ServiceCollectionExtensions
 
     public static void AddSimpleJwtAuthentication(this IServiceCollection services)
     {
-        services.AddScoped<AuthenticationStateProvider, SimpleJwtAuthenticationStateProvider>();
-        services.AddScoped<IClientAuthenticationService, SimpleJwtServerClientAuthenticationService>();
+        services.AddSingleton<SimpleIdentityStore>();
+        services.AddSingleton<IIdentityDataBroker, SimpleIdentityDataBroker>();
         services.AddSingleton<IJwtAuthenticationIssuer, SimpleJwtServerAuthenticationIssuer>();
-        services.AddBlazoredLocalStorage();
+        services.AddScoped<IClientAuthenticationService, SimpleJwtServerClientAuthenticationService>();
+        services.AddScoped<AuthenticationStateProvider, SimpleJwtAuthenticationStateProvider>();
         //services.AddAuthorizationCore();
     }
     public static void AddWASMServerSimpleJwtAuthentication(this IServiceCollection services)

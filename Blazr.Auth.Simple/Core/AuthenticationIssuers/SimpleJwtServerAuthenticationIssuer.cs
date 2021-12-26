@@ -28,10 +28,11 @@ public class SimpleJwtServerAuthenticationIssuer : IJwtAuthenticationIssuer
     /// </summary>
     /// <param name="userCredentials">Credentials used to validate the identity</param>
     /// <returns>Either valid SessionToken if authentication is successful or an empty SessionToken</returns>
-    public Task<SessionToken> GetAuthenticationTokenAsync(IdentityLoginCredentials userCredentials)
+    public async Task<SessionToken> GetAuthenticationTokenAsync(IdentityLoginCredentials userCredentials)
     {
+        var identity = await _identityDataBroker.GetIdentityAsync(userCredentials);
 
-        var isAuthenticated = _identityDataBroker.TryGetIdentity(userCredentials, out ClaimsPrincipal identity);
+        var isAuthenticated = identity.Identity is not null;
 
         var sessionToken = SessionTokenManagement.GetNewSessionToken(identity.Claims.ToArray(), _jwtTokenSetup);
 
@@ -41,7 +42,7 @@ public class SimpleJwtServerAuthenticationIssuer : IJwtAuthenticationIssuer
             : $"{_debugLabel} - Identity {userCredentials.UserName} unknown."
             );
 
-        return Task.FromResult(sessionToken);
+        return sessionToken;
     }
 
     /// <summary>
