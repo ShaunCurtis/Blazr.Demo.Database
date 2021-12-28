@@ -1,26 +1,27 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="Entities\WeatherForecast\Routes\WeatherForecastEditForm.razor" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="Entities\WeatherForecast\Routes\WeatherForecastEditForm.razor" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Blazr.Auth.Simple\Blazr.Auth.Simple.csproj" />
-    <ProjectReference Include="..\Blazr.Core\Blazr.Core.csproj" />
-    <ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
-    <ProjectReference Include="..\Blazr.UI.Bootstrap\Blazr.UI.Bootstrap.csproj" />
-    <ProjectReference Include="..\Blazr.UI\Blazr.UI.csproj" />
-    <ProjectReference Include="..\Blazr.Demo.Database.Core\Blazr.Demo.Database.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Blazr.Auth.JWT.Simple\Blazr.Auth.JWT.Simple.csproj" />
+		<ProjectReference Include="..\Blazr.Core\Blazr.Core.csproj" />
+		<ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
+		<ProjectReference Include="..\Blazr.UI.Bootstrap\Blazr.UI.Bootstrap.csproj" />
+		<ProjectReference Include="..\Blazr.UI\Blazr.UI.csproj" />
+		<ProjectReference Include="..\Blazr.Demo.Database.Core\Blazr.Demo.Database.Core.csproj" />
+	</ItemGroup>
 
 </Project>

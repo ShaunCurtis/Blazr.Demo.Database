@@ -1,4 +1,5 @@
-using Blazr.Auth;
+using Blazr.Auth.JWT.Simple;
+using Blazr.Auth.JWT.Simple.Core;
 using Blazr.Demo.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -15,7 +16,7 @@ var services = builder.Services;
 
     services.AddAppWASMServerServices();
     services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Demo.Database.Controllers.WeatherForecastController).Assembly));
-    services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Auth.Controllers.JwtAuthenticationController).Assembly));
+    services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Auth.Issuer.JwtAuthenticationController).Assembly));
     services.Configure<JwtTokenSetup>(builder.Configuration.GetSection("JwtTokenSetup"));
     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -31,7 +32,7 @@ var services = builder.Services;
                 LifetimeValidator = SessionTokenManagement.JwtTokenLifetimeValidator,
             };
         });
-    services.AddWASMServerSimpleJwtAuthentication();
+    services.AddSimpleJwtWASMServerAuthentication();
 }
 
 var app = builder.Build();

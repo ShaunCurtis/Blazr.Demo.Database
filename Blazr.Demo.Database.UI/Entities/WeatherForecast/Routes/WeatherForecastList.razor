@@ -3,6 +3,7 @@
 @page "/weatherforecasts"
 @namespace Blazr.Demo.Database.UI
 @implements IDisposable
+@attribute [Authorize(Policy = "IsUser")]
 
 <WeatherForecastListHeader/>
 

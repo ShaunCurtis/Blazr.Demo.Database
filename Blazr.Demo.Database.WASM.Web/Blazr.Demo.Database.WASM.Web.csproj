@@ -12,10 +12,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Blazr.Auth.Issuer\Blazr.Auth.Issuer.csproj" />
+		<ProjectReference Include="..\Blazr.Auth.JWT.Simple\Blazr.Auth.JWT.Simple.csproj" />
 		<ProjectReference Include="..\Blazr.Demo.Database.Controllers\Blazr.Demo.Database.Controllers.csproj" />
-		<ProjectReference Include="..\Blazr.Demo.Database\Blazr.Demo.Database.csproj" />
-		<ProjectReference Include="..\Blazr.Demo.Database.UI\Blazr.Demo.Database.UI.csproj" />
 		<ProjectReference Include="..\Blazr.Demo.Database.WASM\Blazr.Demo.Database.WASM.csproj" />
+		<ProjectReference Include="..\Blazr.Demo.Database\Blazr.Demo.Database.csproj" />
+		<ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
 	</ItemGroup>
 
 </Project>

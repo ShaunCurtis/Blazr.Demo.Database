@@ -4,7 +4,7 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-using Blazr.Auth.Core;
+using Blazr.Auth.JWT.Simple.Core;
 using System.Net.Http.Headers;
 namespace Blazr.Demo.Database.Data
 {
@@ -25,7 +25,7 @@ namespace Blazr.Demo.Database.Data
 
         public async ValueTask<bool> AddForecastAsync(DcoWeatherForecast record)
         {
-            var token = await this.clientAuthenticationService.GetCurrentSessionTokenAsync();
+            var token = this.clientAuthenticationService.GetCurrentSessionToken();
             this.httpClient!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.JwtToken);
 
             var response = await this.httpClient!.PostAsJsonAsync<DcoWeatherForecast>($"/api/weatherforecast/add", record);

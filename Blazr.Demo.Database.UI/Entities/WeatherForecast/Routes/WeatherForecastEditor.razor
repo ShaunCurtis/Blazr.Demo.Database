@@ -1,5 +1,5 @@
 ﻿@page "/weatherforecast/edit/{Id:guid}"
-
+@attribute [Authorize(Policy = "IsAdmin")]
 <WeatherForecastEditForm Id=this.Id></WeatherForecastEditForm>
 
 @code {

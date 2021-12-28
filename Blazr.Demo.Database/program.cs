@@ -1,4 +1,5 @@
 ﻿global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.AspNetCore.Authorization;
 
 global using Blazr.NavigationLocker;
 
