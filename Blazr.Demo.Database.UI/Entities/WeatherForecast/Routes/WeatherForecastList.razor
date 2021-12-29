@@ -2,32 +2,9 @@
 @page "/weatherforecast"
 @page "/weatherforecasts"
 @namespace Blazr.Demo.Database.UI
-@implements IDisposable
-@attribute [Authorize(Policy = "IsUser")]
+@attribute [Authorize(Policy = "IsVisitor")]
 
 <WeatherForecastListHeader/>
 
 <WeatherForecastListForm />
 
-
-@code {
-
-    [Inject] private WeatherForecastsViewService? _listViewService { get; set; }
-    [Inject] private WeatherForecastViewService? _recordViewService { get; set; }
-
-    protected async override void OnInitialized()
-    {
-        await this._listViewService!.GetForecastsAsync();
-        this._listViewService.ListChanged += this.OnListChanged;
-    }
-
-    private async Task LoadRecords(int page)
-        => await this._listViewService!.GetForecastsAsync();
-
-    private void OnListChanged(object? sender, EventArgs e)
-        => this.InvokeAsync(this.StateHasChanged);
-
-    public void Dispose()
-        => this._listViewService!.ListChanged -= this.OnListChanged;
-
-}

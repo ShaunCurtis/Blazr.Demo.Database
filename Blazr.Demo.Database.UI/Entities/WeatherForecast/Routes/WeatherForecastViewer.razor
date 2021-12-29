@@ -1,5 +1,5 @@
 ﻿@page "/weatherforecast/view/{Id:guid}"
-@attribute [Authorize(Policy = "IsUser")]
+@attribute [Authorize(Policy = "IsVisitor")]
 
 <WeatherForecastViewForm Id=this.Id></WeatherForecastViewForm>
 

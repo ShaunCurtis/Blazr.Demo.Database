@@ -24,12 +24,6 @@ public static class IServiceCollectionExtensions
         services.AddScoped<WeatherForecastViewService>();
         services.AddTransient<WeatherForecastsViewService>();
         services.AddBlazrNavigationLockerWASMServices();
-        services.AddAuthorizationCore(config =>
-        {
-            config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
-            config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
-            config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
-        });
     }
 
     public static void AddAppWASMServerServices(this IServiceCollection services)

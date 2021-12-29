@@ -25,9 +25,7 @@ namespace Blazr.Demo.Database.Data
 
         public async ValueTask<bool> AddForecastAsync(DcoWeatherForecast record)
         {
-            var token = this.clientAuthenticationService.GetCurrentSessionToken();
-            this.httpClient!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.JwtToken);
-
+            this.AddJWTTokenAuthorization();
             var response = await this.httpClient!.PostAsJsonAsync<DcoWeatherForecast>($"/api/weatherforecast/add", record);
             var result = await response.Content.ReadFromJsonAsync<bool>();
             return result;
@@ -35,6 +33,7 @@ namespace Blazr.Demo.Database.Data
 
         public async ValueTask<bool> UpdateForecastAsync(DcoWeatherForecast record)
         {
+            this.AddJWTTokenAuthorization();
             var response = await this.httpClient!.PostAsJsonAsync<DcoWeatherForecast>($"/api/weatherforecast/update", record);
             var result = await response.Content.ReadFromJsonAsync<bool>();
             return result;
@@ -42,6 +41,7 @@ namespace Blazr.Demo.Database.Data
 
         public async ValueTask<bool> DeleteForecastAsync(Guid Id)
         {
+            this.AddJWTTokenAuthorization();
             var response = await this.httpClient!.PostAsJsonAsync<Guid>($"/api/weatherforecast/delete", Id);
             var result = await response.Content.ReadFromJsonAsync<bool>();
             return result;
@@ -49,6 +49,7 @@ namespace Blazr.Demo.Database.Data
 
         public async ValueTask<DcoWeatherForecast> GetForecastAsync(Guid Id)
         {
+            this.AddJWTTokenAuthorization();
             var response = await this.httpClient!.PostAsJsonAsync<Guid>($"/api/weatherforecast/get", Id);
             var result = await response.Content.ReadFromJsonAsync<DcoWeatherForecast>();
             return result;
@@ -56,8 +57,15 @@ namespace Blazr.Demo.Database.Data
 
         public async ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync()
         {
+            this.AddJWTTokenAuthorization();
             var list = await this.httpClient!.GetFromJsonAsync<List<DcoWeatherForecast>>($"/api/weatherforecast/list");
             return list!;
+        }
+
+        private void AddJWTTokenAuthorization()
+        {
+            var token = this.clientAuthenticationService.GetCurrentSessionToken();
+            this.httpClient!.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token.JwtToken);
         }
     }
 }

@@ -16,7 +16,7 @@ var services = builder.Services;
 
     services.AddAppWASMServerServices();
     services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Demo.Database.Controllers.WeatherForecastController).Assembly));
-    services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Auth.Issuer.JwtAuthenticationController).Assembly));
+    services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Auth.JWT.Issuer.JwtAuthenticationController).Assembly));
     services.Configure<JwtTokenSetup>(builder.Configuration.GetSection("JwtTokenSetup"));
     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -33,6 +33,12 @@ var services = builder.Services;
             };
         });
     services.AddSimpleJwtWASMServerAuthentication();
+    services.AddAuthorization(config =>
+    {
+        config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
+        config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
+        config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
+    });
 }
 
 var app = builder.Build();
@@ -51,10 +57,11 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapRazorPages();
 app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.Run();
-

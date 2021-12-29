@@ -8,7 +8,7 @@ using Blazr.Auth.JWT.Simple.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Blazr.Auth.Issuer;
+namespace Blazr.Auth.JWT.Issuer;
 
 [ApiController]
 public class JwtAuthenticationController : ControllerBase

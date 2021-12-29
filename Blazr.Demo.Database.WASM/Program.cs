@@ -17,6 +17,12 @@ var services = builder.Services;
 {
     services.AddSimpleJwtWASMAuthentication();
     services.AddAppBlazorWASMServices();
+    services.AddAuthorizationCore(config =>
+    {
+        config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
+        config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
+        config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
+    });
 
     services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 }

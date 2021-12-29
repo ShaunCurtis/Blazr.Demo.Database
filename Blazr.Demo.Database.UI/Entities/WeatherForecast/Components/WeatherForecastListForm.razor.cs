@@ -16,8 +16,11 @@ public partial class WeatherForecastListForm : ComponentBase
 
     private ComponentState loadState => isLoading ? ComponentState.Loading : ComponentState.Loaded;
 
-    protected override void OnInitialized()
-        => this.listViewService!.ListChanged += this.OnListChanged;
+    protected async override Task OnInitializedAsync()
+    {
+        await this.listViewService!.GetForecastsAsync();
+        this.listViewService.ListChanged += this.OnListChanged;
+    }
 
     private async Task DeleteRecord(Guid Id)
         => await this.recordViewService!.DeleteRecordAsync(Id);

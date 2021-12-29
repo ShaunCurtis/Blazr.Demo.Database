@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blazr.Auth.Issuer\Blazr.Auth.Issuer.csproj" />
+    <ProjectReference Include="..\Blazr.Auth.JWT.Issuer\Blazr.Auth.JWT.Issuer.csproj" />
     <ProjectReference Include="..\Blazr.Auth.JWT.Simple\Blazr.Auth.JWT.Simple.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database\Blazr.Demo.Database.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database.Core\Blazr.Demo.Database.Core.csproj" />
