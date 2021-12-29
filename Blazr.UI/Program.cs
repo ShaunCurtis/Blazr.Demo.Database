@@ -17,5 +17,3 @@ global using System.Diagnostics;
 
 global using Blazr.NavigationLocker;
 global using Blazr.Core;
-
-namespace Blazr.UI;

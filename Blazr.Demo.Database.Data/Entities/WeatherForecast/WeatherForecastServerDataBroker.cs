@@ -17,19 +17,19 @@ namespace Blazr.Demo.Database.Data
 
         public WeatherForecastServerDataBroker(WeatherForecastDataStore weatherForecastDataStore)
             => this.weatherForecastDataStore = weatherForecastDataStore;
-        public async ValueTask<DcoWeatherForecast> GetForecastAsync(Guid Id)
-            => await this.weatherForecastDataStore!.GetForecastAsync(Id);
+        public async ValueTask<DcoWeatherForecast> GetForecastAsync(Guid transactionId,Guid Id)
+            => await this.weatherForecastDataStore.GetForecastAsync(Id);
 
-        public async ValueTask<bool> AddForecastAsync(DcoWeatherForecast record)
-            => await this.weatherForecastDataStore!.AddForecastAsync(record);
+        public async ValueTask<bool> AddForecastAsync(Guid transactionId, DcoWeatherForecast record)
+            => await this.weatherForecastDataStore.AddForecastAsync(record);
 
-        public async ValueTask<bool> DeleteForecastAsync(Guid Id)
-            => await this.weatherForecastDataStore!.DeleteForecastAsync(Id);
+        public async ValueTask<bool> DeleteForecastAsync(Guid transactionId, Guid Id)
+            => await this.weatherForecastDataStore.DeleteForecastAsync(Id);
 
-        public async ValueTask<bool> UpdateForecastAsync(DcoWeatherForecast record)
-            => await this.weatherForecastDataStore!.UpdateForecastAsync(record);
+        public async ValueTask<bool> UpdateForecastAsync(Guid transactionId, DcoWeatherForecast record)
+            => await this.weatherForecastDataStore.UpdateForecastAsync(record);
 
-        public async ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync()
-            => await this.weatherForecastDataStore!.GetWeatherForecastsAsync();
+        public async ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId)
+            => await this.weatherForecastDataStore.GetWeatherForecastsAsync();
     }
 }

@@ -1,10 +1,5 @@
-using Blazr.Auth.JWT.Simple;
-using Blazr.Auth.JWT.Simple.Core;
-using Blazr.Demo.Database;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Blazr.Auth.JWT.API.Web;
+using Blazr.Demo.Database.API.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,33 +8,9 @@ var services = builder.Services;
 {
     services.AddControllersWithViews();
     services.AddRazorPages();
-
-    services.AddAppWASMServerServices();
-    services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Demo.Database.Controllers.WeatherForecastController).Assembly));
-    services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(Blazr.Auth.JWT.Issuer.JwtAuthenticationController).Assembly));
-    services.Configure<JwtTokenSetup>(builder.Configuration.GetSection("JwtTokenSetup"));
-    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateAudience = false,
-                ValidIssuer = builder.Configuration.GetSection("JwtTokenSetup").GetValue<string>("Issuer"),
-                ValidateIssuer = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JwtTokenSetup").GetValue<string>("Key"))),
-                ValidateIssuerSigningKey = true,
-                RequireExpirationTime = true,
-                LifetimeValidator = SessionTokenManagement.JwtTokenLifetimeValidator,
-            };
-        });
-    services.AddSimpleJwtWASMServerAuthentication();
-    services.AddAuthorization(config =>
-    {
-        config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
-        config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
-        config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
-    });
 }
+builder.AddAppWASMServerServices();
+builder.AddSimpleJwtWASMServerAuthentication();
 
 var app = builder.Build();
 

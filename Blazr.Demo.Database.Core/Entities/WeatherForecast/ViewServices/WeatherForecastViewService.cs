@@ -24,27 +24,27 @@ public class WeatherForecastViewService
 
     public async ValueTask GetForecastAsync(Guid Id)
     {
-        this.Record = await weatherForecastDataBroker!.GetForecastAsync(Id);
+        this.Record = await weatherForecastDataBroker!.GetForecastAsync(Guid.NewGuid(), Id);
         this.EditModel.Populate(this.Record);
     }
 
     public async ValueTask AddRecordAsync(DcoWeatherForecast record)
     {
         this.Record = record;
-        await weatherForecastDataBroker!.AddForecastAsync(this.Record);
+        await weatherForecastDataBroker!.AddForecastAsync(Guid.NewGuid(),this.Record);
         weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
     }
 
     public async ValueTask UpdateRecordAsync()
     {
         this.Record = EditModel.ToDco;
-        await weatherForecastDataBroker!.UpdateForecastAsync(this.Record);
+        await weatherForecastDataBroker!.UpdateForecastAsync(Guid.NewGuid(),this.Record);
         weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
     }
 
     public async ValueTask DeleteRecordAsync(Guid Id)
     {
-        _ = await weatherForecastDataBroker!.DeleteForecastAsync(Id);
+        _ = await weatherForecastDataBroker!.DeleteForecastAsync(Guid.NewGuid(),Id);
         weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
     }
 }

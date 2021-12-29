@@ -4,4 +4,3 @@ global using Microsoft.AspNetCore.Components.Rendering;
 global using Microsoft.AspNetCore.Components.Routing;
 global using Microsoft.JSInterop;
 
-namespace Blazr.NavigationLocker;

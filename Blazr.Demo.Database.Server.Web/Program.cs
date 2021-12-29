@@ -4,9 +4,8 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-using Blazr.Auth.JWT.Simple;
-using Blazr.Auth.JWT.Simple.Core;
-using Blazr.Demo.Database;
+using Blazr.Auth.JWT.API.Web;
+using Blazr.Demo.Database.API.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,17 +14,10 @@ var services = builder.Services;
 {
     services.AddRazorPages();
     services.AddServerSideBlazor();
-    services.AddAppBlazorServerServices();
-    services.AddSimpleJwtServerAuthentication();
-    services.Configure<JwtTokenSetup>(builder.Configuration.GetSection("JwtTokenSetup"));
-    services.AddAuthorization(config =>
-    {
-        config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
-        config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
-        config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
-    });
-
 }
+
+builder.AddAppBlazorServerServices();
+builder.AddSimpleJwtServerAuthentication();
 
 var app = builder.Build();
 

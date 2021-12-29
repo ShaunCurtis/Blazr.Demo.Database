@@ -4,10 +4,13 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-global using Microsoft.Extensions.DependencyInjection;
 
-global using Blazr.NavigationLocker;
-global using Blazr.Core;
+namespace Blazr.Core;
 
-global using Blazr.Demo.Database.Core;
-global using Blazr.Demo.Database.Data;
+    public class ReponseMessageEventArgs : EventArgs
+    {
+        public Guid Id { get; set; } = Guid.Empty;
+
+        public ResponseMessage Message { get; set; } = new ResponseMessage();
+    }
+

@@ -18,27 +18,16 @@ public static class ServiceCollectionExtensions
         services.AddAuthorizationCore();
     }
 
-    public static void AddSimpleJwtServerAuthentication(this IServiceCollection services)
-    {
-        services.AddSingleton<SimpleIdentityStore>();
-        services.AddSingleton<IIdentityDataBroker, SimpleIdentityDataBroker>();
-        services.AddSingleton<IJwtAuthenticationIssuer, SimpleJwtServerAuthenticationIssuer>();
-        services.AddScoped<IClientAuthenticationService, SimpleJwtServerClientAuthenticationService>();
-        services.AddScoped<AuthenticationStateProvider, ServiceAuthenticationStateProvider>();
-    }
-
     public static void AddSimpleJwtWASMAuthentication(this IServiceCollection services)
     {
         services.AddScoped<IClientAuthenticationService, SimpleJwtClientAuthenticationService>();
         services.AddScoped<AuthenticationStateProvider, ServiceAuthenticationStateProvider>();
-    }
-
-    public static void AddSimpleJwtWASMServerAuthentication(this IServiceCollection services)
-    {
-        services.AddSingleton<SimpleIdentityStore>();
-        services.AddSingleton<IIdentityDataBroker, SimpleIdentityDataBroker>();
-        services.AddSingleton<IJwtAuthenticationIssuer, SimpleJwtServerAuthenticationIssuer>();
-        //services.AddScoped<AuthenticationStateProvider, ServiceAuthenticationStateProvider>();
+        services.AddAuthorizationCore(config =>
+        {
+            config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
+            config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
+            config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
+        });
     }
 }
 

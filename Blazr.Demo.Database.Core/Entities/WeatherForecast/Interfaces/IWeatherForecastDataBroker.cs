@@ -11,14 +11,14 @@ namespace Blazr.Demo.Database.Core
     /// </summary>
     public interface IWeatherForecastDataBroker
     {
-        public ValueTask<bool> AddForecastAsync(DcoWeatherForecast record);
+        public ValueTask<bool> AddForecastAsync(Guid transactionId, DcoWeatherForecast record);
 
-        public ValueTask<bool> UpdateForecastAsync(DcoWeatherForecast record);
+        public ValueTask<bool> UpdateForecastAsync(Guid transactionId, DcoWeatherForecast record);
 
-        public ValueTask<DcoWeatherForecast> GetForecastAsync(Guid Id);
+        public ValueTask<DcoWeatherForecast> GetForecastAsync(Guid transactionId, Guid Id);
 
-        public ValueTask<bool> DeleteForecastAsync(Guid Id);
+        public ValueTask<bool> DeleteForecastAsync(Guid transactionId, Guid Id);
 
-        public ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync();
+        public ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId);
     }
 }

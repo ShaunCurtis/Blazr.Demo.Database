@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blazr.Auth.JWT.Issuer\Blazr.Auth.JWT.Issuer.csproj" />
+    <ProjectReference Include="..\Blazr.Auth.JWT.API.Web\Blazr.Auth.JWT.API.Web.csproj" />
     <ProjectReference Include="..\Blazr.Auth.JWT.Simple\Blazr.Auth.JWT.Simple.csproj" />
-    <ProjectReference Include="..\Blazr.Demo.Database\Blazr.Demo.Database.csproj" />
+    <ProjectReference Include="..\Blazr.Demo.Database.API.Web\Blazr.Demo.Database.API.Web.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database.Core\Blazr.Demo.Database.Core.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database.Data\Blazr.Demo.Database.Data.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database.UI\Blazr.Demo.Database.UI.csproj" />

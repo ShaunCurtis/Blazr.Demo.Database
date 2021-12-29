@@ -19,7 +19,7 @@ public class WeatherForecastsViewService
     {
         this.Records = null;
         this.ListChanged?.Invoke(this.Records, EventArgs.Empty);
-        this.Records = await weatherForecastDataBroker!.GetWeatherForecastsAsync();
+        this.Records = await weatherForecastDataBroker!.GetWeatherForecastsAsync(Guid.NewGuid());
         this.ListChanged?.Invoke(this.Records, EventArgs.Empty);
     }
 
