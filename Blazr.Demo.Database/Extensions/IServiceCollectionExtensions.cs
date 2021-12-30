@@ -11,7 +11,7 @@ public static class IServiceCollectionExtensions
     {
         services.AddScoped<IWeatherForecastDataBroker, WeatherForecastAPIDataBroker>();
         services.AddScoped<WeatherForecastViewService>();
-        services.AddTransient<WeatherForecastsViewService>();
+        services.AddScoped<WeatherForecastsViewService>();
         services.AddBlazrNavigationLockerWASMServices();
         services.AddSingleton<ResponseMessageStore>();
     }

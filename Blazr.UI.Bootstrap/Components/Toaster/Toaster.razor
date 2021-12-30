@@ -1,0 +1,27 @@
+﻿@*/// ============================================================
+    /// Author: Shaun Curtis, Cold Elm Coders
+    /// License: Use And Donate
+    /// If you use it, donate something to a charity somewhere
+    /// ============================================================
+*@
+@namespace Blazr.UI.Bootstrap
+@implements IDisposable
+@if (this.toasterService.HasToasts)
+{
+    <div class="toast-container">
+        @foreach (var toast in this.toasterService.GetToasts())
+        {
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <img src="..." class="rounded me-2" alt="...">
+                    <strong class="me-auto">@toast.Title</strong>
+                    <small class="text-muted">@toast.ElapsedTimeText</small>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="() => this.ClearToast(toast)"></button>
+                </div>
+                <div class="toast-body">
+                    @toast.Message
+                </div>
+            </div>
+        }
+    </div>
+}

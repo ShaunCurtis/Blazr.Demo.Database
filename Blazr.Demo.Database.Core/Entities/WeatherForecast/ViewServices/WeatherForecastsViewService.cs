@@ -26,9 +26,6 @@ public class WeatherForecastsViewService
     public event EventHandler<EventArgs>? ListChanged;
 
     public async void NotifyListChanged(object? sender, EventArgs e)
-    {
-        await this.GetForecastsAsync();
-        ListChanged?.Invoke(sender, e);
-    }
+        =>  await this.GetForecastsAsync();
 }
 
