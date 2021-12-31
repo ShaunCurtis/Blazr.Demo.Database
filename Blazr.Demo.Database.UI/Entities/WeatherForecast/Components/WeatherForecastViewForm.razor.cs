@@ -9,12 +9,14 @@ namespace Blazr.Demo.Database.UI;
 
 public partial class WeatherForecastViewForm : BaseViewForm
 {
-    [Inject] private WeatherForecastViewService? ViewService { get; set; }
+    private WeatherForecastViewService? _viewService;
 
-    private WeatherForecastViewService viewService => this.ViewService!;
+    private WeatherForecastViewService viewService => this._viewService!;
 
     protected async override Task OnInitializedAsync()
     {
+        _viewService = ScopedServices.GetService(typeof(WeatherForecastViewService)) as WeatherForecastViewService;
+
         base.LoadState = ComponentState.Loading;
         await this.viewService.GetForecastAsync(Id);
         base.LoadState = ComponentState.Loaded;

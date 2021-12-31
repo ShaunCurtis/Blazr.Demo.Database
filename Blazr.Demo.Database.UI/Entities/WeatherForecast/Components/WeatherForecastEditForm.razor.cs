@@ -9,12 +9,13 @@ namespace Blazr.Demo.Database.UI;
 
 public partial class WeatherForecastEditForm : BaseEditForm, IDisposable
 {
-    [Inject] private WeatherForecastViewService? ViewService { get; set; }
-
-    private WeatherForecastViewService viewService => this.ViewService!;
+    private WeatherForecastViewService viewService => _viewService!;
+    private WeatherForecastViewService? _viewService;
 
     protected async override Task OnInitializedAsync()
     {
+        _viewService = ScopedServices.GetService(typeof(WeatherForecastViewService)) as WeatherForecastViewService;
+
         base.LoadState = ComponentState.Loading;
         await this.viewService.GetForecastAsync(Id);
         base.editContent = new EditContext(this.viewService.EditModel);
@@ -25,19 +26,23 @@ public partial class WeatherForecastEditForm : BaseEditForm, IDisposable
 
     private async Task SaveRecord()
     {
-        await this.viewService.UpdateRecordAsync();
+        var tranactionId = Guid.NewGuid();
+        await this.viewService.UpdateRecordAsync(tranactionId);
         base.editStateContext?.NotifySaved();
     }
 
     private async Task AddRecord()
-    => await this.viewService.AddRecordAsync(
-        new DcoWeatherForecast
-        {
-            Date = DateTime.Now,
-            Id = Guid.NewGuid(),
-            Summary = "Balmy",
-            TemperatureC = 14
-        });
+    {
+        var tranactionId = Guid.NewGuid();
+        await this.viewService.AddRecordAsync(tranactionId,
+            new DcoWeatherForecast
+            {
+                Date = DateTime.Now,
+                Id = Guid.NewGuid(),
+                Summary = "Balmy",
+                TemperatureC = 14
+            });
+    }
 
     protected override void BaseExit()
     => this.NavManager?.NavigateTo("/weatherforecast");

@@ -22,7 +22,7 @@ public record Toast
 
     public string ElapsedTimeText =>
         elapsedTime.Seconds > 60
-        ? $"{elapsedTime.Minutes} ago"
-        : $"{elapsedTime.Seconds} ago";
+        ? $"{-elapsedTime.Minutes} mins ago"
+        : $"{-elapsedTime.Seconds} secs ago";
 }
 

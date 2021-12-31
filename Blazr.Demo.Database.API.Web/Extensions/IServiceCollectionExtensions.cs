@@ -1,10 +1,12 @@
-﻿using Blazr.Core;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-/// ============================================================
+﻿/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
+
+
+using Blazr.Core.Toaster;
+
 namespace Blazr.Demo.Database.API.Web;
 
 public static class IServiceCollectionExtensions
@@ -18,6 +20,7 @@ public static class IServiceCollectionExtensions
         services.AddTransient<WeatherForecastViewService>();
         services.AddBlazrNavigationLockerServerServices();
         services.AddSingleton<ResponseMessageStore>();
+        services.AddSingleton<ToasterService>();
     }
 
     public static void AddAppWASMServerServices(this WebApplicationBuilder builder)

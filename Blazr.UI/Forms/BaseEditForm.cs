@@ -7,7 +7,7 @@
 
 namespace Blazr.UI;
 
-public partial class BaseEditForm : ComponentBase
+public partial class BaseEditForm : OwningComponentBase
 {
     protected EditContext? editContent;
 

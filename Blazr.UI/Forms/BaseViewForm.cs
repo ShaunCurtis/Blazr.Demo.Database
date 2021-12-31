@@ -7,7 +7,7 @@
 
 namespace Blazr.UI;
 
-public partial class BaseViewForm : ComponentBase
+public partial class BaseViewForm : OwningComponentBase
 {
     [Parameter] public Guid Id { get; set; } = GuidExtensions.Null;
 

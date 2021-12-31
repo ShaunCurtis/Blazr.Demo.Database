@@ -14,6 +14,12 @@ namespace Blazr.Core.Toaster;
 
     public bool HasToasts => _toastList.Count > 0;  
     
+    public ToasterService()
+    {
+        AddToast(new Toast { Title = "Test Toast", Message = "Test Message" });
+        AddToast(new Toast { Title = "Test Toast 2", Message = "Test Message 2" });
+    }
+
     public List<Toast> GetToasts()
     {
         ClearTTDs();
