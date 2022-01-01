@@ -37,7 +37,7 @@ public class ResponseMessageStore
     public void AddMessage(ResponseMessage message)
     {
         if (!_responseMessages.Contains(message))
-            _responseMessages.Remove(message);
+            _responseMessages.Add(message);
         ClearTTDs();
         this.NewResponseMessage?.Invoke(this, new ReponseMessageEventArgs { Id = message.Id, Message = message });
     }

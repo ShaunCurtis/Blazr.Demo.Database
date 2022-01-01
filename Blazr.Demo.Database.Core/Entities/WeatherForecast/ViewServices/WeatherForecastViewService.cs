@@ -33,21 +33,33 @@ public class WeatherForecastViewService
     public async ValueTask AddRecordAsync(Guid transactionId, DcoWeatherForecast record)
     {
         this.Record = record;
-        await weatherForecastDataBroker!.AddForecastAsync(transactionId, this.Record);
+        if (await weatherForecastDataBroker!.AddForecastAsync(transactionId, this.Record))
+            responseMessageStore.AddMessage(new ResponseMessage {Id = transactionId, Message = "Record Added" });
+        else
+            responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record Add failed", OK = false });
+
         weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
     }
 
     public async ValueTask UpdateRecordAsync(Guid transactionId)
     {
         this.Record = EditModel.ToDco;
-        await weatherForecastDataBroker!.UpdateForecastAsync(transactionId, this.Record);
+        if (await weatherForecastDataBroker!.UpdateForecastAsync(transactionId, this.Record))
+            responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record Updated" });
+        else
+            responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record Update failed", OK = false });
+
         weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
 
     }
 
     public async ValueTask DeleteRecordAsync(Guid transactionId, Guid Id)
     {
-        _ = await weatherForecastDataBroker!.DeleteForecastAsync(transactionId, Id);
+        if (await weatherForecastDataBroker!.DeleteForecastAsync(transactionId, Id))
+            responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record deleted" });
+        else
+            responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record Delete failed", OK = false });
+
         weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Blazr.Demo.Database.UI;
+﻿using Blazr.Core.Toaster;
+
+namespace Blazr.Demo.Database.UI;
 
 public partial class WeatherForecastListForm : ComponentBase
 {
@@ -7,6 +9,10 @@ public partial class WeatherForecastListForm : ComponentBase
     [Inject] private WeatherForecastViewService? recordViewService { get; set; }
 
     [Inject] private NavigationManager? navigationManager { get; set; }
+
+    [Inject] private ToasterService? toasterService { get; set; }
+
+    [Inject] private ResponseMessageStore? ResponseMessageStore { get; set; }
 
     private bool isLoading => listViewService!.Records is null;
 
@@ -23,14 +29,26 @@ public partial class WeatherForecastListForm : ComponentBase
     }
 
     private async Task DeleteRecord(Guid Id)
-        => await this.recordViewService!.DeleteRecordAsync(Id);
+    {
+        var transactionId = Guid.NewGuid();
+        await this.recordViewService!.DeleteRecordAsync(transactionId, Id);
+
+        var message = ResponseMessageStore?.GetMessage(transactionId);
+        if (message is not null)
+        {
+            if (message.OK)
+                toasterService?.AddToast(Toast.NewTTD("Delete", $"Record Deleted.", MessageColour.Success, 5));
+            else
+                toasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+        }
+    }
 
     private async Task EditRecord(Guid Id)
     {
         if (this.IsModal)
         {
             var options = new ModalOptions();
-            options.Set("Id",Id);
+            options.Set("Id", Id);
             await this.modalDialog!.ShowAsync<WeatherForecastEditForm>(options);
         }
         else
@@ -50,14 +68,26 @@ public partial class WeatherForecastListForm : ComponentBase
     }
 
     private async Task AddRecordAsync()
-        => await this.recordViewService!.AddRecordAsync(
-            new DcoWeatherForecast
-            {
-                Date = DateTime.Now,
-                Id = Guid.NewGuid(),
-                Summary = "Balmy",
-                TemperatureC = 14
-            });
+    {
+        var transactionId = Guid.NewGuid();
+        var record = new DcoWeatherForecast
+        {
+            Date = DateTime.Now,
+            Id = Guid.NewGuid(),
+            Summary = "Balmy",
+            TemperatureC = 14
+        };
+        await this.recordViewService!.AddRecordAsync(transactionId, record);
+
+        var message = ResponseMessageStore?.GetMessage(transactionId);
+        if (message is not null)
+        {
+            if (message.OK)
+                toasterService?.AddToast(Toast.NewTTD("Add", $"Record added.", MessageColour.Success, 5));
+            else
+                toasterService?.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+        }
+    }
 
     private void OnListChanged(object? sender, EventArgs e)
         => this.InvokeAsync(this.StateHasChanged);

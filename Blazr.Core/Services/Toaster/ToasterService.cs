@@ -4,20 +4,28 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
+using System.Timers;
+
 namespace Blazr.Core.Toaster;
 
-    public class ToasterService
-    {
-        private readonly List<Toast> _toastList = new List<Toast>();
+public class ToasterService : IDisposable
+{
+    private readonly List<Toast> _toastList = new List<Toast>();
+    private System.Timers.Timer _timer = new System.Timers.Timer();
 
-    public event EventHandler<NewToastEventArgs>? NewToast;
+    public event EventHandler? ToasterChanged;
 
-    public bool HasToasts => _toastList.Count > 0;  
-    
+    public event EventHandler? ToasterTimerElapsed;
+
+    public bool HasToasts => _toastList.Count > 0;
+
     public ToasterService()
     {
-        AddToast(new Toast { Title = "Test Toast", Message = "Test Message" });
-        AddToast(new Toast { Title = "Test Toast 2", Message = "Test Message 2" });
+        AddToast(new Toast { Title = "Welcome Toast", Message = "Welcome to this Application.  I'll disappear after 15 seconds.", TTD = DateTimeOffset.Now.AddSeconds(10) });
+        _timer.Interval = 5000;
+        _timer.AutoReset = true;
+        _timer.Elapsed += this.TimerElapsed;
+        _timer.Start();
     }
 
     public List<Toast> GetToasts()
@@ -26,16 +34,50 @@ namespace Blazr.Core.Toaster;
         return _toastList;
     }
 
+    private void TimerElapsed(object? sender, ElapsedEventArgs e)
+    { 
+        this.ClearTTDs();
+        this.ToasterTimerElapsed?.Invoke(this, EventArgs.Empty);
+    }
+
     public void AddToast(Toast toast)
-        => _toastList.Add(toast);
+    {
+        _toastList.Add(toast);
+        // only raise the ToasterChanged event if it hasn't already been raised by ClearTTDs
+        if (!this.ClearTTDs())
+            this.ToasterChanged?.Invoke(this, EventArgs.Empty);
+    }
 
     public void ClearToast(Toast toast)
-    => _toastList.Remove(toast);
+    {
+        if (_toastList.Contains(toast))
+        {
+            _toastList.Remove(toast);
+            // only raise the ToasterChanged event if it hasn't already been raised by ClearTTDs
+            if (!this.ClearTTDs())
+                this.ToasterChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 
-    private void ClearTTDs()
+    private bool ClearTTDs()
     {
         var toastsToDelete = _toastList.Where(item => item.TTD < DateTimeOffset.Now).ToList();
-        toastsToDelete.ForEach(toast => _toastList.Remove(toast));
+        if (toastsToDelete is not null && toastsToDelete.Count > 0)
+        {
+            toastsToDelete.ForEach(toast => _toastList.Remove(toast));
+            this.ToasterChanged?.Invoke(this, EventArgs.Empty);
+            return true;
+        }
+        return false;
+    }
+
+    public void Dispose()
+    {
+        if (_timer is not null)
+        {
+            _timer.Elapsed += this.TimerElapsed;
+            _timer.Stop();
+        }
     }
 
 }

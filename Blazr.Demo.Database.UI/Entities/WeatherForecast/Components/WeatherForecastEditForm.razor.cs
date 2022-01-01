@@ -4,6 +4,7 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
+using Blazr.Core.Toaster;
 
 namespace Blazr.Demo.Database.UI;
 
@@ -26,15 +27,24 @@ public partial class WeatherForecastEditForm : BaseEditForm, IDisposable
 
     private async Task SaveRecord()
     {
-        var tranactionId = Guid.NewGuid();
-        await this.viewService.UpdateRecordAsync(tranactionId);
+        var transactionId = Guid.NewGuid();
+        await this.viewService.UpdateRecordAsync(transactionId);
         base.editStateContext?.NotifySaved();
+
+        var message = ResponseMessageStore?.GetMessage(transactionId);
+        if (message is null)
+            return;
+
+        if (message.OK)
+            toasterService?.AddToast(Toast.NewTTD("Save", $"Record Saved.", MessageColour.Success, 5));
+        else
+            toasterService?.AddToast(Toast.NewTTD("Save", $"Save Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
     }
 
     private async Task AddRecord()
     {
-        var tranactionId = Guid.NewGuid();
-        await this.viewService.AddRecordAsync(tranactionId,
+        var transactionId = Guid.NewGuid();
+        await this.viewService.AddRecordAsync(transactionId,
             new DcoWeatherForecast
             {
                 Date = DateTime.Now,
@@ -42,6 +52,15 @@ public partial class WeatherForecastEditForm : BaseEditForm, IDisposable
                 Summary = "Balmy",
                 TemperatureC = 14
             });
+
+        var message = ResponseMessageStore?.GetMessage(transactionId);
+        if (message is null)
+            return;
+
+        if (message.OK)
+            toasterService?.AddToast(Toast.NewTTD("Add", $"Record Added.", MessageColour.Success, 5));
+        else
+            toasterService?.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
     }
 
     protected override void BaseExit()

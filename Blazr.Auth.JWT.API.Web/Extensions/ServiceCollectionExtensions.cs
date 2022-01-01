@@ -18,9 +18,10 @@ public static class ServiceCollectionExtensions
         services.Configure<JwtTokenSetup>(builder.Configuration.GetSection("JwtTokenSetup"));
         services.AddAuthorization(config =>
         {
-            config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
-            config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
-            config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
+            foreach (var policy in AppPolicies.Policies)
+            {
+                config.AddPolicy(policy.Key, policy.Value);
+            }
         });
     }
 
@@ -49,9 +50,10 @@ public static class ServiceCollectionExtensions
 
         services.AddAuthorization(config =>
         {
-            config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
-            config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
-            config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
+            foreach (var policy in AppPolicies.Policies) 
+            {
+                config.AddPolicy(policy.Key, policy.Value);
+            }
         });
     }
 }

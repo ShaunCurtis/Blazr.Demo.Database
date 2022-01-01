@@ -29,5 +29,17 @@ public static class AppPolicies
         .RequireAuthenticatedUser()
         .RequireRole("Admin", "User", "Visitor")
         .Build();
+
+    public static Dictionary<string, AuthorizationPolicy> Policies
+    {
+        get
+        {
+            var policies = new Dictionary<string, AuthorizationPolicy>();
+            policies.Add(IsAdmin, IsAdminPolicy);
+            policies.Add(IsUser, IsUserPolicy);
+            policies.Add(IsVisitor, IsVisitorPolicy);
+            return policies;
+        }
+    }
 }
 

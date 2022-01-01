@@ -4,9 +4,8 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-using Microsoft.Extensions.DependencyInjection;
 using Blazr.Auth.JWT.Simple.Core;
-using Blazr.Auth.JWT.Simple.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazr.Auth.JWT.Simple;
 
@@ -24,9 +23,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<AuthenticationStateProvider, ServiceAuthenticationStateProvider>();
         services.AddAuthorizationCore(config =>
         {
-            config.AddPolicy(AppPolicies.IsAdmin, AppPolicies.IsAdminPolicy);
-            config.AddPolicy(AppPolicies.IsUser, AppPolicies.IsUserPolicy);
-            config.AddPolicy(AppPolicies.IsVisitor, AppPolicies.IsVisitorPolicy);
+            foreach (var policy in AppPolicies.Policies)
+            {
+                config.AddPolicy(policy.Key, policy.Value);
+            }
         });
     }
 }

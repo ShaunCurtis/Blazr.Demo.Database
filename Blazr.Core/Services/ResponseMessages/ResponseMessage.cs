@@ -14,6 +14,8 @@ public record ResponseMessage
 
     public bool OK { get; init; } = true;
 
-    public DateTimeOffset TTD { get; init; } = DateTimeOffset.Now.AddSeconds(60);
-}
+    public DateTimeOffset TTD { get; init; } = DateTimeOffset.Now.AddSeconds(15);
 
+    public static ResponseMessage NewResponseMessage (Guid id, string message, bool oK, int secsToLive )
+        => new ResponseMessage { Id = id, Message = message, OK = oK, TTD = DateTimeOffset.Now.AddSeconds(secsToLive) };
+}

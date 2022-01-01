@@ -4,6 +4,7 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
+using Blazr.Core.Toaster;
 
 namespace Blazr.UI;
 
@@ -20,6 +21,10 @@ public partial class BaseEditForm : OwningComponentBase
     [CascadingParameter] public IModalDialog? Modal { get; set; }
 
     [Inject] protected NavigationManager? NavManager { get; set; }
+
+    [Inject] protected ToasterService? toasterService { get; set; }
+
+    [Inject] protected ResponseMessageStore? ResponseMessageStore { get; set; }
 
     public ComponentState LoadState { get; protected set; } = ComponentState.New;
 
