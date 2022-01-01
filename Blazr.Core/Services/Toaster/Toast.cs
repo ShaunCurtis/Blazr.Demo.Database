@@ -32,6 +32,8 @@ public record Toast
 
     public DateTimeOffset TTD { get; init; } = DateTimeOffset.Now.AddSeconds(30);
 
+    public bool IsBurnt => TTD < DateTimeOffset.Now;
+
     private TimeSpan elapsedTime => Posted - DateTimeOffset.Now;
 
     public string ElapsedTimeText =>
@@ -39,10 +41,6 @@ public record Toast
         ? $"posted {-elapsedTime.Minutes} mins ago"
         : $"posted {-elapsedTime.Seconds} secs ago";
 
-    //public string ElapsedTimeText =>
-    //elapsedTime.Seconds > 60
-    //? $"{-elapsedTime.Minutes} mins ago posted:{Posted.UtcDateTime.ToLongTimeString()} TTD:{TTD.UtcDateTime.ToLongTimeString()}"
-    //: $"{-elapsedTime.Seconds} secs ago posted:{Posted.UtcDateTime.ToLongTimeString()} TTD:{TTD.UtcDateTime.ToLongTimeString()}";
 
     public static Toast NewTTD(string title, string message, MessageColour messageColour, int secsToLive)
         => new Toast

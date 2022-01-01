@@ -61,7 +61,7 @@ public class ToasterService : IDisposable
 
     private bool ClearTTDs()
     {
-        var toastsToDelete = _toastList.Where(item => item.TTD < DateTimeOffset.Now).ToList();
+        var toastsToDelete = _toastList.Where(item => item.IsBurnt).ToList();
         if (toastsToDelete is not null && toastsToDelete.Count > 0)
         {
             toastsToDelete.ForEach(toast => _toastList.Remove(toast));
@@ -79,6 +79,5 @@ public class ToasterService : IDisposable
             _timer.Stop();
         }
     }
-
 }
 
