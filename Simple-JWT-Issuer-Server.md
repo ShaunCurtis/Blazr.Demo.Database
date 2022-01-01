@@ -1,14 +1,12 @@
 # Simple JWT Issuer Server
 
-The first step is to build a simple JWT Issuer Server.
+Step one is a simple JWT Issuer Server.  The suppoirt classes used are cover in the Support Classes document.
 
-This will use a set of fixed identities we can use with fixed Guids that are easy to recognise.  The identities are provided by a static `FixedIdentities` object in the Core domain.
-
-DotNetCore's main identity class is `ClaimsPrincipal`, so the class class contains a set of `ClaimsPrincipal` objects for each identity and a set of collections of these objects. 
+To keep things simple we have a static `FixedIdentities` object in the Core domain. This uses a set of fixed identities we can use with easy to recognise fixed Guids.  DotNetCore's main identity class is the `ClaimsPrincipal`: each identity is a `ClaimsPrincipal` object.  There are various dictionaries of these `ClaimsPrincipal`objects. 
  
 ### SimpleIdentities
 
- `SimpleIdentities` declares three identities: Visitor, User and Admin.  The declaration for `User` along with it's `Claim` collection is shown below.  
+`SimpleIdentities` declares three identities: Visitor, User and Admin.  The declaration for `User` along with it's `Claim` collection is shown below.  
 
 ```csharp
 public static readonly Guid UserId = Guid.Parse("10000000-0000-0000-0000-000000000002");
@@ -26,19 +24,17 @@ public static Claim[] UserClaims
             new Claim(ClaimTypes.Role, "User")
     };
 ```
-The three collections are shown below.
+The three dictionaries are shown below.
 
 ```csharp
     public static Dictionary<string, ClaimsPrincipal> IdentityNameCollection
-
     public static Dictionary<Guid, ClaimsPrincipal> IdentityIdCollection
-
     public static Dictionary<Guid, string> IdentityList
 ```
 
 ### SimpleIdentityStore
 
-`SimpleIdentityStore` has one method to get an identity.
+the `SimpleIdentityStore` is the data store.  In our simple provider it gets the identities from `SimpleIdentities`.  It has a single public method to get an identity.
 
 ```csharp
 public class SimpleIdentityStore
@@ -53,7 +49,11 @@ public class SimpleIdentityStore
 
 ## Data Brokers
 
+Data brokers are the connectors between the core domain and data domain.  Abstration is through the `IIdentityDataBroker`. 
+
 ### IIdentityDataBroker
+
+It defines the single public method exposed by the data store.
 
 ```csharp
 public interface IIdentityDataBroker
@@ -63,6 +63,8 @@ public interface IIdentityDataBroker
 ```
 
 ### SimpleIdentityDataBroker
+
+In this example the only implementation interfacing with the `SimpleIdentityStore`.  In real life there would be a test data, such as we have implemented and a live data broker interfacing with a database.
 
 ```csharp
 public class SimpleIdentityDataBroker : IIdentityDataBroker
@@ -79,7 +81,7 @@ public class SimpleIdentityDataBroker : IIdentityDataBroker
 
 ## JWT Issuer
 
-We define an interface:
+Next we need an issuer for consummers to use.  Again we define an interface for abstraction.  
 
 ```csharp
 public interface IJwtAuthenticationIssuer
@@ -90,7 +92,7 @@ public interface IJwtAuthenticationIssuer
 }
 ```
 
-Our concrete class is:
+Our Server class is:
 
 ```csharp
 public class SimpleJwtServerAuthenticationIssuer : IJwtAuthenticationIssuer
@@ -147,3 +149,7 @@ public class JwtAuthenticationController : ControllerBase
         => this.Ok(_authenticationIssuer.TryValidateToken(currentSessionToken));
 }
 ```
+
+## Wrap Up
+
+We now have a JWT token issuer we can use in both WASM and Server projects.

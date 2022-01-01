@@ -7,7 +7,7 @@ You can find the code in my Blazr.Demo.Database site.  Search the repo for the r
 - The Service files are in *Blazr.Core/Services/Toaster*.
 - The Component is in *Blazr.UI.Bootstrap/Components/Toaster*.
 
-A demo site can be found here at [https://blazr-demo.azurewebsites.net ](https://blazr-demo.azurewebsites.net)
+A demo site can be found here at [https://blazr-demo-database-server.azurewebsites.net](https://blazr-demo-database-server.azurewebsites.net)
 
 ### Toast
 

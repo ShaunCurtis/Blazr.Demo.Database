@@ -8,9 +8,9 @@
         <UIListColumn HeaderTitle="Temp &deg;F">@context.TemperatureF</UIListColumn>
         <UIListColumn IsMaxColumn=true HeaderTitle="Summary">@context.Summary</UIListColumn>
         <UIListColumn HeaderTitle="Edit/View" NoWrap="true">
-            <UIButton type="button" class="btn-sm btn-primary" ClickEvent="() => this.EditRecord(context.Id)">Edit</UIButton>
-            <UIButton type="button" class="btn-sm btn-secondary" ClickEvent="() => this.ViewRecord(context.Id)">View</UIButton>
-            <UIButton type="button" class="btn-sm btn-danger" ClickEvent="() => this.DeleteRecord(context.Id)">Delete</UIButton>
+            <UIAuthorizeButton Policy=@AppPolicies.IsUser type="button" class="btn-sm btn-primary" ClickEvent="() => this.EditRecord(context.Id)">Edit</UIAuthorizeButton>
+            <UIAuthorizeButton Policy=@AppPolicies.IsVisitor type="button" class="btn-sm btn-secondary" ClickEvent="() => this.ViewRecord(context.Id)">View</UIAuthorizeButton>
+            <UIAuthorizeButton Policy=@AppPolicies.IsUser type="button" class="btn-sm btn-danger" ClickEvent="() => this.DeleteRecord(context.Id)">Delete</UIAuthorizeButton>
         </UIListColumn>
     </RowTemplate>
 </UIListControl>
@@ -18,12 +18,11 @@
 <UIContainer Size=BootstrapSize.Fluid>
     <UIFormRow>
         <UIColumn Columns=12 class="text-end">
-            <UIButton class="btn-dark" ClickEvent="AddRecordAsync">Add Random Record</UIButton>
+            <UIAuthorizeButton Policy=@AppPolicies.IsUser class="btn-dark" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
         </UIColumn>
     </UIFormRow>
 </UIContainer>
 
-@if (this.IsModal)
-{
+<UIDisplay Display=this.IsModal>
     <BaseModalDialog @ref="this.modalDialog"></BaseModalDialog>
-}
+</UIDisplay>
