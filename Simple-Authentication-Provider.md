@@ -2,13 +2,16 @@
 
 The Blazor UI Authorization components use the DI registered `AuthenticationProvider` to access the currently authenticated entity.
 
-The default `AuthenticationProvider` reads the User information encoded into the Http Header and creates a `ClaimsPrincipal` object from the information.  Authentication takes place "off SPA", so there's no inbuilt functionality to change entities.
+The default `AuthenticationProvider` reads the User information encoded into the Http Header and creates a `ClaimsPrincipal` object from the information.  Authentication takes place "off SPA", so there's no in-built functionality to change entities.
 
 To use onsite authentication with JWT tokens we need to rebuild the `AuthenticationProvider`.
 
 #### ServiceAuthenticationStateProvider
 
-`SimpleJwtAuthenticationStateProvider` inherits from `AuthenticationProvider`.  It overrides `GetAuthenticationStateAsync` to get current identity from the `IClientAuthenticationService`.
+`SimpleJwtAuthenticationStateProvider` inherits from `AuthenticationProvider`.  
+
+1. It overrides `GetAuthenticationStateAsync` to get current identity from the `IClientAuthenticationService`.
+2. It wires into the `OnAuthenticationChanged` event on `IClientAuthenticationService` and raises the inherited `AuthenticationStateChanged` on `AuthenticationProvider` by calling `NotifyAuthenticationStateChanged`.
 
 
 ```csharp
@@ -39,7 +42,7 @@ public class ServiceAuthenticationStateProvider : AuthenticationStateProvider, I
 
 ## UI
 
-The UI is a simple component `UserBar` which is placed in the header bar.  It provides a simple dropdown to select the identity.
+The UI is a simple component `UserBar` placed in the header bar.  It provides a simple dropdown to select the identity.
 
 ```html
 <span class="mr-2">Change User:</span>

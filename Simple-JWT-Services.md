@@ -1,6 +1,14 @@
 # Simple JWT Services
 
-First the interface:
+We need two services: one for Server that interfaces directly with the Issuer,  and one for WASM that uses the API interface.
+
+First we need an interface to define our service.  There's:
+
+1. A login method
+2. A logout method
+3. A method to get the current Session Token
+4. A method to get the current Identity
+5. An event to raise when the Identity changes.
 
 ```csharp
 public interface IClientAuthenticationService
@@ -13,11 +21,11 @@ public interface IClientAuthenticationService
 }
 ```
 
-And a base abstract class.
+Most of the code is common to Server and WASM implementations so we define an abstract base class to hold this common code. 
 
 `LogInAsync` is the core method. It:
-1. Gets the token from the issuer based on the supplied credentials.  The implementation of `GetTokenAsync` depends on the child implementation.
-2. Checks if the toek in valid
+1. Gets the token from the issuer based on the supplied credentials.  The implementation of `GetTokenAsync` is abstact and implemented differently in the WASM and Server child implementation.
+2. Checks if the toek in valid.
 3. Invokes `AuthenticationChanged`.
 
 ```csharp
@@ -56,8 +64,6 @@ public abstract class BaseJwtClientAuthenticationService : IClientAuthentication
 }
 ```
 
-There are two implementations.
-
 #### SimpleJwtServerClientAuthenticationService
 
 `SimpleJwtServerClientAuthenticationService` interfaces directly with the instance of `IJwtAuthenticationIssuer` running in the DI container.  This is used in Server mode.
@@ -80,7 +86,7 @@ public class SimpleJwtServerClientAuthenticationService : BaseJwtClientAuthentic
 
 #### SimpleJwtClientAuthenticationService
 
-`SimpleJwtClientAuthenticationService` is the WASM implementation that interfaces with the API.
+`SimpleJwtClientAuthenticationService` is the WASM implementation that interfaces with the API through the `HttpClient` service.
 
 ```csharp
 public class SimpleJwtClientAuthenticationService : BaseJwtClientAuthenticationService, IClientAuthenticationService
