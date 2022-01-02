@@ -8,7 +8,7 @@ using Blazr.Core.Toaster;
 
 namespace Blazr.Demo.Database.UI;
 
-public partial class WeatherForecastEditForm : BaseEditForm, IDisposable
+public partial class WeatherForecastEditForm : BaseEditForm<DcoWeatherForecast>, IDisposable
 {
     private WeatherForecastViewService viewService => _viewService!;
     private WeatherForecastViewService? _viewService;
@@ -19,6 +19,13 @@ public partial class WeatherForecastEditForm : BaseEditForm, IDisposable
 
         base.LoadState = ComponentState.Loading;
         await this.viewService.GetForecastAsync(Id);
+        
+        if (!await this.CheckAuthorization(this.viewService.Record, AppPolicies.IsEditor))
+        {
+            LoadState = ComponentState.UnAuthorized;
+            return;
+        }
+
         base.editContent = new EditContext(this.viewService.EditModel);
         base.editStateContext = new EditStateContext(base.editContent);
         base.editStateContext.EditStateChanged += base.OnEditStateChanged;

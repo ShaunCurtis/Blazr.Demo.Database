@@ -23,7 +23,7 @@ namespace Blazr.Template.Tests.DataBrokers
             var dataBroker = new WeatherForecastServerDataBroker(weatherForecastDataStore: weatherForecastDataStore);
 
             // test
-            var retrievedRecords = await dataBroker.GetWeatherForecastsAsync();
+            var retrievedRecords = await dataBroker.GetWeatherForecastsAsync(Guid.NewGuid());
             var retrievedRecordCount = retrievedRecords.Count;
 
             // assert

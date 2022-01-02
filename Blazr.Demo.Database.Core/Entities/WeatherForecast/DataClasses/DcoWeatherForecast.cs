@@ -10,6 +10,8 @@ namespace Blazr.Demo.Database.Core
     {
         public Guid Id { get; init; } = GuidExtensions.Null;
 
+        public Guid OwnerId { get; init; }
+
         public DateTime Date { get; init; }
 
         public int TemperatureC { get; init; }

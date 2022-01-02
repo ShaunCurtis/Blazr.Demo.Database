@@ -7,7 +7,7 @@ namespace Blazr.Auth.JWT.API.Web;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddSimpleJwtServerAuthentication(this WebApplicationBuilder builder)
+    public static void AddSimpleJwtServerAuthentication(this WebApplicationBuilder builder, bool withAuthorization = true)
     {
         var services = builder.Services;
         services.AddSingleton<SimpleIdentityStore>();
@@ -16,16 +16,19 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IClientAuthenticationService, SimpleJwtServerClientAuthenticationService>();
         services.AddScoped<AuthenticationStateProvider, ServiceAuthenticationStateProvider>();
         services.Configure<JwtTokenSetup>(builder.Configuration.GetSection("JwtTokenSetup"));
-        services.AddAuthorization(config =>
+        if (withAuthorization)
         {
-            foreach (var policy in AppPolicies.Policies)
+            services.AddAuthorization(config =>
             {
-                config.AddPolicy(policy.Key, policy.Value);
-            }
-        });
+                foreach (var policy in SimpleJWTPolicies.Policies)
+                {
+                    config.AddPolicy(policy.Key, policy.Value);
+                }
+            });
+        }
     }
 
-    public static void AddSimpleJwtWASMServerAuthentication(this WebApplicationBuilder builder)
+    public static void AddSimpleJwtWASMServerAuthentication(this WebApplicationBuilder builder, bool withAuthorization = true)
     {
         var services = builder.Services;
         services.AddSingleton<SimpleIdentityStore>();
@@ -48,13 +51,16 @@ public static class ServiceCollectionExtensions
                 };
             });
 
-        services.AddAuthorization(config =>
+        if (withAuthorization)
         {
-            foreach (var policy in AppPolicies.Policies) 
+            services.AddAuthorization(config =>
             {
-                config.AddPolicy(policy.Key, policy.Value);
-            }
-        });
+                foreach (var policy in SimpleJWTPolicies.Policies)
+                {
+                    config.AddPolicy(policy.Key, policy.Value);
+                }
+            });
+        }
     }
 }
 

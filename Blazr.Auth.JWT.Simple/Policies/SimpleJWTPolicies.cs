@@ -6,8 +6,12 @@
 
 namespace Blazr.Auth.JWT.Simple;
 
-public static class AppPolicies
+public static class SimpleJWTPolicies
 {
+    public const string Admin = "Admin";
+    public const string User = "User";
+    public const string Visitor = "Visitor";
+
     public const string IsAdmin = "IsAdmin";
     public const string IsUser = "IsUser";
     public const string IsVisitor = "IsVisitor";

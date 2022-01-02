@@ -8,9 +8,9 @@
         <UIListColumn HeaderTitle="Temp &deg;F">@context.TemperatureF</UIListColumn>
         <UIListColumn IsMaxColumn=true HeaderTitle="Summary">@context.Summary</UIListColumn>
         <UIListColumn HeaderTitle="Edit/View" NoWrap="true">
-            <UIAuthorizeButton Policy=@AppPolicies.IsUser type="button" class="btn-sm btn-primary" ClickEvent="() => this.EditRecord(context.Id)">Edit</UIAuthorizeButton>
-            <UIAuthorizeButton Policy=@AppPolicies.IsVisitor type="button" class="btn-sm btn-secondary" ClickEvent="() => this.ViewRecord(context.Id)">View</UIAuthorizeButton>
-            <UIAuthorizeButton Policy=@AppPolicies.IsUser type="button" class="btn-sm btn-danger" ClickEvent="() => this.DeleteRecord(context.Id)">Delete</UIAuthorizeButton>
+            <UIAuthorizeRecordButton Record=context Policy=@AppPolicies.IsViewer type="button" class="btn-sm btn-secondary" ClickEvent="() => this.ViewRecord(context.Id)">View</UIAuthorizeRecordButton>
+            <UIAuthorizeRecordButton Record=context Policy=@AppPolicies.IsEditor type="button" class="btn-sm btn-primary" ClickEvent="() => this.EditRecord(context.Id)">Edit</UIAuthorizeRecordButton>
+            <UIAuthorizeRecordButton Record=context Policy=@AppPolicies.IsEditor type="button" class="btn-sm btn-danger" ClickEvent="() => this.DeleteRecord(context.Id)">Delete</UIAuthorizeRecordButton>
         </UIListColumn>
     </RowTemplate>
 </UIListControl>
@@ -18,7 +18,7 @@
 <UIContainer Size=BootstrapSize.Fluid>
     <UIFormRow>
         <UIColumn Columns=12 class="text-end">
-            <UIAuthorizeButton Policy=@AppPolicies.IsUser class="btn-dark" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
+            <UIAuthorizeButton Policy=@AppPolicies.IsViewer class="btn-dark" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
         </UIColumn>
     </UIFormRow>
 </UIContainer>

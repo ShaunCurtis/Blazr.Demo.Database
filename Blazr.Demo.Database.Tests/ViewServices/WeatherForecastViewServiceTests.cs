@@ -20,7 +20,7 @@ namespace Blazr.Template.Tests.ViewServices
             WeatherForecastsViewService? weatherForecastsViewService = new WeatherForecastsViewService(weatherForecastDataBroker: dataBrokerMock.Object);
 
             dataBrokerMock.Setup(item =>
-                item.GetWeatherForecastsAsync())
+                item.GetWeatherForecastsAsync(Guid.NewGuid()))
                .Returns(this.GetWeatherForecastListAsync(noOfRecords));
             object? eventSender = null;
             object? eventargs = null;
@@ -34,7 +34,7 @@ namespace Blazr.Template.Tests.ViewServices
             Assert.Equal(expectedCount, weatherForecastsViewService.Records!.Count);
             Assert.IsType<List<DcoWeatherForecast>?>(eventSender);
             Assert.IsType<EventArgs>(eventargs);
-            dataBrokerMock.Verify(item => item.GetWeatherForecastsAsync(), Times.Once);
+            dataBrokerMock.Verify(item => item.GetWeatherForecastsAsync(Guid.NewGuid()), Times.Once);
             dataBrokerMock.VerifyNoOtherCalls();
         }
     }

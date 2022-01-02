@@ -17,7 +17,8 @@ var services = builder.Services;
 }
 
 builder.AddAppBlazorServerServices();
-builder.AddSimpleJwtServerAuthentication();
+builder.AddSimpleJwtServerAuthentication(false);
+builder.AddAppBlazorServerAuthorizationServices();
 
 var app = builder.Build();
 

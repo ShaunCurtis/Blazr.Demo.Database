@@ -27,6 +27,7 @@ namespace Blazr.Demo.Database.Data
             return Enumerable.Range(1, _recordsToGet).Select(index => new DboWeatherForecast
             {
                 Id = Guid.NewGuid(),
+                OwnerId = Guid.Parse($"10000000-0000-0000-0000-00000000000{rng.Next(2, 4)}"),
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]
@@ -89,6 +90,7 @@ namespace Blazr.Demo.Database.Data
             return Enumerable.Range(1, count).Select(index => new DcoWeatherForecast
             {
                 Id = Guid.NewGuid(),
+                OwnerId = Guid.Parse($"10000000-0000-0000-0000-00000000000{rng.Next(2, 4)}"),
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]

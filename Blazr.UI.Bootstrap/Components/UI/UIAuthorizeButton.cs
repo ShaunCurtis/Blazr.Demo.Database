@@ -1,8 +1,4 @@
-﻿
-
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Authorization;
-/// ============================================================
+﻿/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
@@ -12,10 +8,10 @@ namespace Blazr.UI.Bootstrap;
 public class UIAuthorizeButton : UIComponent
 {
     [Parameter] public string Policy { get; set; } = String.Empty;
-    
+
     [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
 
-    [Inject] private IAuthorizationService? authorizationService { get; set; }
+    [Inject] protected IAuthorizationService? authorizationService { get; set; }
 
     public UIAuthorizeButton()
         => this.CssClasses.Add("btn me-1");
@@ -50,11 +46,10 @@ public class UIAuthorizeButton : UIComponent
         }
     }
 
-    protected async Task<bool> CheckPolicy()
+    protected virtual async Task<bool> CheckPolicy()
     {
         var state = await AuthTask!;
         var result = await this.authorizationService!.AuthorizeAsync(state.User, null, Policy);
         return result.Succeeded;
     }
 }
-

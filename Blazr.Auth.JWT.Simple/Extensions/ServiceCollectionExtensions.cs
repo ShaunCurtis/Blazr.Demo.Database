@@ -17,17 +17,21 @@ public static class ServiceCollectionExtensions
         services.AddAuthorizationCore();
     }
 
-    public static void AddSimpleJwtWASMAuthentication(this IServiceCollection services)
+    public static void AddSimpleJwtWASMAuthentication(this IServiceCollection services, bool withAuthorization = true )
     {
         services.AddScoped<IClientAuthenticationService, SimpleJwtClientAuthenticationService>();
         services.AddScoped<AuthenticationStateProvider, ServiceAuthenticationStateProvider>();
-        services.AddAuthorizationCore(config =>
+
+        if (withAuthorization)
         {
-            foreach (var policy in AppPolicies.Policies)
+            services.AddAuthorizationCore(config =>
             {
-                config.AddPolicy(policy.Key, policy.Value);
-            }
-        });
+                foreach (var policy in SimpleJWTPolicies.Policies)
+                {
+                    config.AddPolicy(policy.Key, policy.Value);
+                }
+            });
+        }
     }
 }
 

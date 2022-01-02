@@ -9,7 +9,8 @@
 @inherits ComponentBase
 @if (this.State == ComponentState.Loaded)
 {
-    @this.ChildContent }
+    @this.ChildContent 
+}
 else if (this.State == ComponentState.InError)
 {
     if (this.ErrorContent != null)
@@ -17,7 +18,16 @@ else if (this.State == ComponentState.InError)
         @this.ErrorContent }
     else
     {
-        <div class="m-2 p-2">Error Loading Content</div> }
+        <div class="m-2 p-2 bg-danger text-white">Error Loading Content</div> }
+}
+else if (this.State == ComponentState.UnAuthorized)
+{
+    if (this.UnAuthorizedContent != null)
+    {
+        @this.UnAuthorizedContent }
+    else
+    {
+        <div class="m-2 p-2 bg-dark text-white">You do not have permission to access this resource</div> }
 }
 else
 {
@@ -34,6 +44,8 @@ else
     [Parameter] public RenderFragment? LoadingContent { get; set; }
 
     [Parameter] public RenderFragment? ErrorContent { get; set; }
+
+    [Parameter] public RenderFragment? UnAuthorizedContent { get; set; }
 
     [Parameter] public ComponentState State { get; set; } = ComponentState.Loaded;
 }

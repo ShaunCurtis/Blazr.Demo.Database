@@ -118,6 +118,22 @@ public static class SessionTokenManagement
         return isIdentity;
     }
 
+    /// <summary>
+    /// Gets the Guid Id for the supplied identity
+    /// </summary>
+    /// <param name="principal"></param>
+    /// <returns></returns>
+    public static Guid GetIdentityId(ClaimsPrincipal? principal)
+    {
+        if (principal is not null)
+        {
+            var claim = principal.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Sid);
+            if (claim is not null && Guid.TryParse(claim.Value, out Guid id))
+                return id;
+        }
+        return Guid.Empty;
+    }
+
     public static ClaimsPrincipal AnonymousClaimsPrincipal
         => new ClaimsPrincipal(new ClaimsIdentity(null, ""));
 

@@ -3,12 +3,9 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
-using Blazr.Core.Toaster;
-
 namespace Blazr.UI;
 
-public partial class BaseEditForm : OwningComponentBase
+public partial class BaseEditForm<TRecord> : OwningComponentBase
 {
     protected EditContext? editContent;
 
@@ -20,11 +17,15 @@ public partial class BaseEditForm : OwningComponentBase
 
     [CascadingParameter] public IModalDialog? Modal { get; set; }
 
+    [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
+
     [Inject] protected NavigationManager? NavManager { get; set; }
 
     [Inject] protected ToasterService? toasterService { get; set; }
 
     [Inject] protected ResponseMessageStore? ResponseMessageStore { get; set; }
+
+    [Inject] protected IAuthorizationService? AuthorizationService { get; set; }
 
     public ComponentState LoadState { get; protected set; } = ComponentState.New;
 
@@ -67,4 +68,11 @@ public partial class BaseEditForm : OwningComponentBase
 
     protected virtual void BaseExit()
         => this.NavManager?.NavigateTo("/");
+
+    protected virtual async Task<bool> CheckAuthorization(TRecord record, string policy)
+    {
+        var state = await AuthTask!;
+        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, record, policy);
+        return result.Succeeded;
+    }
 }

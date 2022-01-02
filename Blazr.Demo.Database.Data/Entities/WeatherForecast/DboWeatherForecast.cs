@@ -11,6 +11,8 @@ namespace Blazr.Demo.Database.Data
     {
         public Guid Id { get; init; }
 
+        public Guid OwnerId { get; init; }
+
         public DateTime Date { get; init; }
 
         public int TemperatureC { get; init; }
@@ -21,15 +23,17 @@ namespace Blazr.Demo.Database.Data
             => new DcoWeatherForecast
             {
                 Id = this.Id,
+                OwnerId = this.OwnerId,
                 Date = this.Date,
                 TemperatureC = this.TemperatureC,
-                Summary = this.Summary
+                Summary = this.Summary ?? string.Empty,
             };
 
         public static DboWeatherForecast FromDto(DcoWeatherForecast record)
             => new DboWeatherForecast
             {
                 Id = record.Id,
+                OwnerId = record.OwnerId, 
                 Date = record.Date,
                 TemperatureC = record.TemperatureC,
                 Summary = record.Summary

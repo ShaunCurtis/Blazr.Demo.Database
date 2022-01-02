@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Blazr.Auth.JWT.Simple\Blazr.Auth.JWT.Simple.csproj" />
     <ProjectReference Include="..\Blazr.Core\Blazr.Core.csproj" />
   </ItemGroup>
 

@@ -10,6 +10,8 @@ namespace Blazr.Demo.Database.Core
     {
         public Guid Id { get; set; } = GuidExtensions.Null;
 
+        public Guid OwnerId { get; set; }
+
         public DateTime Date { get; set; }
 
         public int TemperatureC { get; set; }
@@ -23,6 +25,7 @@ namespace Blazr.Demo.Database.Core
         public void Populate(DcoWeatherForecast record)
         {
             this.Id = record.Id;
+            this.OwnerId = record.OwnerId;
             this.Date = record.Date;
             this.Summary = record.Summary;
             this.TemperatureC = record.TemperatureC;
@@ -31,6 +34,7 @@ namespace Blazr.Demo.Database.Core
         public DcoWeatherForecast ToDco =>
             new DcoWeatherForecast() {
                 Id = this.Id,
+                OwnerId = this.OwnerId,
                 Date = this.Date,
                 Summary = this.Summary,
                 TemperatureC = this.TemperatureC

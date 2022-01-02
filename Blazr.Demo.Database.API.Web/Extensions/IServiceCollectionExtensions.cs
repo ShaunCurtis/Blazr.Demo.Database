@@ -5,6 +5,7 @@
 /// ============================================================
 
 
+using Blazr.Auth.JWT.Simple;
 using Blazr.Core.Toaster;
 
 namespace Blazr.Demo.Database.API.Web;
@@ -30,5 +31,27 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<WeatherForecastDataStore>();
         services.AddSingleton<IWeatherForecastDataBroker, WeatherForecastServerDataBroker>();
     }
+
+    public static void AddAppBlazorServerAuthorizationServices(this WebApplicationBuilder builder)
+    {
+        var services = builder.Services;
+        services.AddSingleton<IAuthorizationHandler, WeatherForecastOwnerAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, WeatherForecastEditorAuthorizationHandler>();
+        services.AddAuthorization(config =>
+        {
+            foreach (var policy in SimpleJWTPolicies.Policies)
+            {
+                config.AddPolicy(policy.Key, policy.Value);
+            }
+
+            foreach (var policy in AppPolicies.Policies)
+            {
+                config.AddPolicy(policy.Key, policy.Value);
+            }
+        });
+
+    }
+
+
 }
 

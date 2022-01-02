@@ -7,7 +7,7 @@
 
 namespace Blazr.Demo.Database.UI;
 
-public partial class WeatherForecastViewForm : BaseViewForm
+public partial class WeatherForecastViewForm : BaseViewForm<DcoWeatherForecast>
 {
     private WeatherForecastViewService? _viewService;
 
@@ -19,6 +19,13 @@ public partial class WeatherForecastViewForm : BaseViewForm
 
         base.LoadState = ComponentState.Loading;
         await this.viewService.GetForecastAsync(Id);
+
+        if (!await this.CheckAuthorization(this.viewService.Record, AppPolicies.IsViewer))
+        {
+            LoadState = ComponentState.UnAuthorized;
+            return;
+        }
+
         base.LoadState = ComponentState.Loaded;
     }
 

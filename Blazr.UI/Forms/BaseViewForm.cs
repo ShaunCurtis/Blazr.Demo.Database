@@ -7,7 +7,7 @@
 
 namespace Blazr.UI;
 
-public partial class BaseViewForm : OwningComponentBase
+public partial class BaseViewForm<TRecord> : OwningComponentBase
 {
     [Parameter] public Guid Id { get; set; } = GuidExtensions.Null;
 
@@ -15,7 +15,11 @@ public partial class BaseViewForm : OwningComponentBase
 
     [CascadingParameter] public IModalDialog? Modal { get; set; }
 
+    [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
+
     [Inject] protected NavigationManager? NavManager { get; set; }
+
+    [Inject] protected IAuthorizationService? AuthorizationService { get; set; }
 
     public ComponentState LoadState { get; protected set; } = ComponentState.New;
 
@@ -39,4 +43,12 @@ public partial class BaseViewForm : OwningComponentBase
 
     protected virtual void BaseExit()
         => this.NavManager?.NavigateTo("/");
+
+    protected virtual async Task<bool> CheckAuthorization(TRecord record, string policy)
+    {
+        var state = await AuthTask!;
+        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, record, policy);
+        return result.Succeeded;
+    }
+
 }

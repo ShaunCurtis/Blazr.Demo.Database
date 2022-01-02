@@ -11,6 +11,7 @@ namespace Blazr.UI;
         New,
         Loading,
         Loaded,
-        InError
+        InError,
+        UnAuthorized
     }
 
