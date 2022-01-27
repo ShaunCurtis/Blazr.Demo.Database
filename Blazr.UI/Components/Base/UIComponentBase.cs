@@ -7,7 +7,7 @@
 
 namespace Blazr.UI;
 
-public class UIComponentBase : ComponentBase
+public abstract class UIComponentBase : ComponentBase
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
