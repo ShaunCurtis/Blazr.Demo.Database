@@ -18,7 +18,6 @@
     <ProjectReference Include="..\Blazr.Demo.Database.Data\Blazr.Demo.Database.Data.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database.UI\Blazr.Demo.Database.UI.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database\Blazr.Demo.Database.csproj" />
-    <ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
     <ProjectReference Include="..\Blazr.UI.Bootstrap\Blazr.UI.Bootstrap.csproj" />
     <ProjectReference Include="..\Blazr.UI\Blazr.UI.csproj" />
   </ItemGroup>

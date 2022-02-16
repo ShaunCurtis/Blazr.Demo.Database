@@ -7,6 +7,7 @@
 
 using Blazr.Auth.JWT.Simple;
 using Blazr.Core.Toaster;
+using Blazr.Routing;
 
 namespace Blazr.Demo.Database.API.Web;
 
@@ -19,7 +20,7 @@ public static class IServiceCollectionExtensions
         services.AddSingleton<IWeatherForecastDataBroker, WeatherForecastServerDataBroker>();
         services.AddScoped<WeatherForecastsViewService>();
         services.AddTransient<WeatherForecastViewService>();
-        services.AddBlazrNavigationLockerServerServices();
+        services.AddBlazrNavigationManager();
         services.AddSingleton<ResponseMessageStore>();
         services.AddSingleton<ToasterService>();
     }

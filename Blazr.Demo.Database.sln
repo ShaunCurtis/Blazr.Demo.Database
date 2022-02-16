@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Demo.Database.UI", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Core", "Blazr.Core\Blazr.Core.csproj", "{071A7138-0EA1-4BEF-A1C6-206C3059B2B4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.NavigationLocker", "Blazr.NavigationLocker\Blazr.NavigationLocker.csproj", "{03DA3A39-796B-42E3-952F-D64B57ACD218}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.UI", "Blazr.UI\Blazr.UI.csproj", "{C33172E3-6847-4615-A99B-0F4D878AB2E4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.UI.Bootstrap", "Blazr.UI.Bootstrap\Blazr.UI.Bootstrap.csproj", "{123EDD1C-2D59-4325-8728-4AF9359951DB}"
@@ -44,6 +42,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Auth.JWT.Simple", "Bl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Auth.JWT.API.Web", "Blazr.Auth.JWT.API.Web\Blazr.Auth.JWT.API.Web.csproj", "{48936602-81F9-41F4-896B-948E10605467}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.Routing", "Blazr.Routing\Blazr.Routing.csproj", "{E5751768-5D72-49BD-BC03-9A0BC72231AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,10 +70,6 @@ Global
 		{071A7138-0EA1-4BEF-A1C6-206C3059B2B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{071A7138-0EA1-4BEF-A1C6-206C3059B2B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{071A7138-0EA1-4BEF-A1C6-206C3059B2B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03DA3A39-796B-42E3-952F-D64B57ACD218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03DA3A39-796B-42E3-952F-D64B57ACD218}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03DA3A39-796B-42E3-952F-D64B57ACD218}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03DA3A39-796B-42E3-952F-D64B57ACD218}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C33172E3-6847-4615-A99B-0F4D878AB2E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C33172E3-6847-4615-A99B-0F4D878AB2E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C33172E3-6847-4615-A99B-0F4D878AB2E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -110,6 +106,10 @@ Global
 		{48936602-81F9-41F4-896B-948E10605467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48936602-81F9-41F4-896B-948E10605467}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48936602-81F9-41F4-896B-948E10605467}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5751768-5D72-49BD-BC03-9A0BC72231AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5751768-5D72-49BD-BC03-9A0BC72231AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5751768-5D72-49BD-BC03-9A0BC72231AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5751768-5D72-49BD-BC03-9A0BC72231AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

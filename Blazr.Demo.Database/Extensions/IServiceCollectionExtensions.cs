@@ -1,4 +1,5 @@
-﻿/// ============================================================
+﻿using Blazr.Routing;
+/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
@@ -12,7 +13,7 @@ public static class IServiceCollectionExtensions
         services.AddScoped<IWeatherForecastDataBroker, WeatherForecastAPIDataBroker>();
         services.AddScoped<WeatherForecastViewService>();
         services.AddScoped<WeatherForecastsViewService>();
-        services.AddBlazrNavigationLockerWASMServices();
+        services.AddBlazrNavigationManager();
         services.AddSingleton<ResponseMessageStore>();
     }
 }

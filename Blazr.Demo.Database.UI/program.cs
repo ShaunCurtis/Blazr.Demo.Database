@@ -9,5 +9,6 @@ global using Blazr.Core;
 global using Blazr.UI;
 global using Blazr.UI.Bootstrap;
 global using Blazr.Core.Toaster;
+global using Blazr.Routing;
 
 global using Blazr.Demo.Database.Core;

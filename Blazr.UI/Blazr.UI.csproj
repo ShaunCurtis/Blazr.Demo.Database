@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Blazr.Core\Blazr.Core.csproj" />
-    <ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
+    <ProjectReference Include="..\Blazr.Routing\Blazr.Routing.csproj" />
   </ItemGroup>
 
   <ItemGroup>
