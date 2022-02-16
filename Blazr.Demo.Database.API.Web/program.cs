@@ -1,7 +1,7 @@
 ﻿global using Blazr.Core;
 global using Blazr.Demo.Database.Core;
 global using Blazr.Demo.Database.Data;
-global using Blazr.NavigationLocker;
+global using Blazr.Routing;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ApplicationParts;

@@ -18,7 +18,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\Blazr.Auth.JWT.Simple\Blazr.Auth.JWT.Simple.csproj" />
 		<ProjectReference Include="..\Blazr.Core\Blazr.Core.csproj" />
-		<ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
+		<ProjectReference Include="..\Blazr.Routing\Blazr.Routing.csproj" />
 		<ProjectReference Include="..\Blazr.UI.Bootstrap\Blazr.UI.Bootstrap.csproj" />
 		<ProjectReference Include="..\Blazr.UI\Blazr.UI.csproj" />
 		<ProjectReference Include="..\Blazr.Demo.Database.Core\Blazr.Demo.Database.Core.csproj" />

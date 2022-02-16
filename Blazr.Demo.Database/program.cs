@@ -6,7 +6,7 @@
 
 global using Microsoft.Extensions.DependencyInjection;
 
-global using Blazr.NavigationLocker;
+global using Blazr.Routing;
 global using Blazr.Core;
 
 global using Blazr.Demo.Database.Core;

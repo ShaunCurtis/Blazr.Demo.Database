@@ -16,7 +16,6 @@
 		<ProjectReference Include="..\Blazr.Auth.JWT.Simple\Blazr.Auth.JWT.Simple.csproj" />
 		<ProjectReference Include="..\Blazr.Demo.Database.API.Web\Blazr.Demo.Database.API.Web.csproj" />
 		<ProjectReference Include="..\Blazr.Demo.Database.WASM\Blazr.Demo.Database.WASM.csproj" />
-		<ProjectReference Include="..\Blazr.NavigationLocker\Blazr.NavigationLocker.csproj" />
 	</ItemGroup>
 
 </Project>

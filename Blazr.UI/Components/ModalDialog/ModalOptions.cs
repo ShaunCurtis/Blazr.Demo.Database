@@ -1,4 +1,6 @@
-﻿namespace Blazr.UI;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Blazr.UI;
 
 public class ModalOptions : IEnumerable<KeyValuePair<string, object>>
 {
@@ -29,7 +31,7 @@ public class ModalOptions : IEnumerable<KeyValuePair<string, object>>
         return default;
     }
 
-    public bool TryGet<T>(string key, out T? value)
+    public bool TryGet<T>(string key, [NotNullWhen(true)] out T? value)
     {
         value = default;
         if (this.Parameters.ContainsKey(key))

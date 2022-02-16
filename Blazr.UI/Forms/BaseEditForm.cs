@@ -13,14 +13,14 @@ public partial class BaseEditForm<TRecord> : OwningComponentBase
 
     [Parameter] public EventCallback ExitAction { get; set; }
 
-    [CascadingParameter] protected NavigationLock? navigationLock { get; set; }
-
     [CascadingParameter] public IModalDialog? Modal { get; set; }
 
     [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
 
-    [Inject] protected NavigationManager? NavManager { get; set; }
+    [Inject] protected IBlazrNavigationManager? NavManager { get; set; }
 
+    protected BlazrNavigationManager? BlazrNavManager => NavManager is BlazrNavigationManager ? NavManager as BlazrNavigationManager : null;
+    
     [Inject] protected ToasterService? toasterService { get; set; }
 
     [Inject] protected ResponseMessageStore? ResponseMessageStore { get; set; }
@@ -40,7 +40,7 @@ public partial class BaseEditForm<TRecord> : OwningComponentBase
 
     protected void OnEditStateChanged(object? sender, EditStateEventArgs e)
     {
-        navigationLock?.SetLock(e.IsDirty);
+        this.BlazrNavManager?.SetLockState(e.IsDirty);
         this.InvokeAsync(StateHasChanged);
     }
 
@@ -49,7 +49,7 @@ public partial class BaseEditForm<TRecord> : OwningComponentBase
 
     protected async void ExitWithoutSaving()
     {
-        navigationLock?.SetLock(false);
+        this.BlazrNavManager?.SetLockState(false);
         await DoExit();
     }
 
