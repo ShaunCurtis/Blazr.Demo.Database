@@ -8,20 +8,20 @@ namespace Blazr.Demo.Database.Core;
 public class WeatherForecastViewService
 {
     private readonly IWeatherForecastDataBroker? weatherForecastDataBroker;
-
     private readonly WeatherForecastsViewService weatherForecastsViewService;
-
+    private readonly WeatherForecastNotificationService weatherForecastNotificationService;
     private readonly ResponseMessageStore responseMessageStore;
 
     public DcoWeatherForecast Record { get; private set; } = new DcoWeatherForecast();
 
     public DeoWeatherForecast EditModel { get; private set; } = new DeoWeatherForecast();
 
-    public WeatherForecastViewService(IWeatherForecastDataBroker weatherForecastDataBroker, WeatherForecastsViewService weatherForecastsViewService, ResponseMessageStore responseMessageStore)
+    public WeatherForecastViewService(IWeatherForecastDataBroker weatherForecastDataBroker, WeatherForecastsViewService weatherForecastsViewService, ResponseMessageStore responseMessageStore, WeatherForecastNotificationService weatherForecastNotificationService)
     {
         this.weatherForecastDataBroker = weatherForecastDataBroker!;
         this.weatherForecastsViewService = weatherForecastsViewService;
         this.responseMessageStore = responseMessageStore;
+        this.weatherForecastNotificationService = weatherForecastNotificationService;
     }
 
     public async ValueTask GetForecastAsync(Guid Id)
@@ -38,7 +38,8 @@ public class WeatherForecastViewService
         else
             responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record Add failed", OK = false });
 
-        weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
+        this.weatherForecastNotificationService.NotifyRecordChanged(this, new RecordChangedEventArgs());
+        this.weatherForecastNotificationService.NotifyRecordSetChanged(this, new RecordSetChangedEventArgs());
     }
 
     public async ValueTask UpdateRecordAsync(Guid transactionId)
@@ -49,8 +50,8 @@ public class WeatherForecastViewService
         else
             responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record Update failed", OK = false });
 
-        weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
-
+        this.weatherForecastNotificationService.NotifyRecordChanged(this, new RecordChangedEventArgs());
+        this.weatherForecastNotificationService.NotifyRecordSetChanged(this, new RecordSetChangedEventArgs());
     }
 
     public async ValueTask DeleteRecordAsync(Guid transactionId, Guid Id)
@@ -60,6 +61,7 @@ public class WeatherForecastViewService
         else
             responseMessageStore.AddMessage(new ResponseMessage { Id = transactionId, Message = "Record Delete failed", OK = false });
 
-        weatherForecastsViewService.NotifyListChanged(this, EventArgs.Empty);
+        this.weatherForecastNotificationService.NotifyRecordChanged(this, new RecordChangedEventArgs());
+        this.weatherForecastNotificationService.NotifyRecordSetChanged(this, new RecordSetChangedEventArgs());
     }
 }

@@ -9,7 +9,7 @@ namespace Blazr.Demo.Database.Data
 {
     public class WeatherForecastDataStore
     {
-        private int _recordsToGet = 5;
+        private int _recordsToGet = 1000;
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -70,13 +70,23 @@ namespace Blazr.Demo.Database.Data
             return ValueTask.FromResult(deleted);
         }
 
-        public ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync()
+        public ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(ListOptions options)
         {
+            var recs = _records
+                .AsQueryable()
+                .OrderBy(item => item.Date)
+                .Skip(options.StartRecord)
+                .Take(options.PageSize)
+                .ToList();
+
             var list = new List<DcoWeatherForecast>();
-            _records
+            recs
                 .ForEach(item => list.Add(item.ToDto()));
             return ValueTask.FromResult(list);
         }
+
+        public ValueTask<int> GetWeatherForecastCountAsync()
+            =>  ValueTask.FromResult(_records.Count);
 
         public void OverrideWeatherForecastDateSet(List<DcoWeatherForecast> list)
         {

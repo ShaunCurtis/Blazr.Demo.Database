@@ -18,6 +18,7 @@ public static class IServiceCollectionExtensions
         var services = builder.Services;
         services.AddSingleton<WeatherForecastDataStore>();
         services.AddSingleton<IWeatherForecastDataBroker, WeatherForecastServerDataBroker>();
+        services.AddScoped<WeatherForecastNotificationService>();
         services.AddScoped<WeatherForecastsViewService>();
         services.AddTransient<WeatherForecastViewService>();
         services.AddBlazrNavigationManager();

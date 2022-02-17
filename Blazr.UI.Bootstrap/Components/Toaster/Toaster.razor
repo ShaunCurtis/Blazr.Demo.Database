@@ -9,7 +9,7 @@
 @if (this.toasterService.HasToasts)
 {
     <div class="">
-        <div class="toast-container position-absolute top-0 end-0 mt-5 pt-5 pe-2">
+        <div class="toast-container position-absolute top-0 start-0 mt-5 pt-5 pe-2">
             @foreach (var toast in this.toasterService.GetToasts())
             {
                 var _toastCss = toastCss(toast);

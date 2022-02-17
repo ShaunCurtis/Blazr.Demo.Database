@@ -11,8 +11,12 @@ global using Microsoft.AspNetCore.Components.Web;
 global using Microsoft.JSInterop;
 global using Microsoft.AspNetCore.Authorization;
 global using Microsoft.AspNetCore.Components.Authorization;
+global using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 global using System.Collections;
 global using System.Linq.Expressions;
 global using System.Text;
 global using System.Diagnostics;
+
+global using Blazr.Core;
+

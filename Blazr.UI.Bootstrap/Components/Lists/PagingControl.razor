@@ -1,0 +1,33 @@
+﻿@*/// ============================================================
+    /// Author: Shaun Curtis, Cold Elm Coders
+    /// License: Use And Donate
+    /// If you use it, donate something to a charity somewhere
+    /// ============================================================*@
+
+@namespace Blazr.UI.Bootstrap
+@typeparam TRecord
+
+<div class="m-2 p-2">
+    @if (this.AreBlocks)
+    {
+        <div class="btn-group me-1" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(int.MinValue)">|&lt;</button>
+            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(-1)">&lt;&lt;</button>
+        </div>
+    }
+    <div class="btn-group" role="group" aria-label="Basic example">
+        @for (int page = this.BlockStartPage; page <= this.BlockEndPage; page++)
+        {
+            var pageno = page;
+            var viewpageno = page + 1;
+            <button type="button" class="btn @GetCss(pageno)" @onclick="() => this.GotToPage(pageno)">@viewpageno</button>
+        }
+    </div>
+    @if (this.AreBlocks)
+    {
+        <div class="btn-group ms-1" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(1)">&gt;&gt;</button>
+            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(int.MaxValue)">&gt;|</button>
+        </div>
+    }
+</div>
