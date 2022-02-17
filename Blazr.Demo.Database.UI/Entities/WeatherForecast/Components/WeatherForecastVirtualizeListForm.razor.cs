@@ -1,17 +1,21 @@
-﻿/// ============================================================
+﻿using Microsoft.AspNetCore.Components.Web.Virtualization;
+/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
+
 namespace Blazr.Demo.Database.UI;
 
-public partial class WeatherForecastListForm : ComponentBase
+public partial class WeatherForecastVirtualizeListForm : ComponentBase
 {
     [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
 
     [Inject] private WeatherForecastsViewService? _listViewService { get; set; }
 
     [Inject] private WeatherForecastViewService? _recordViewService { get; set; }
+
+    [Inject] private WeatherForecastNotificationService? _notificationService { get; set; }
 
     [Inject] private NavigationManager? navigationManager { get; set; }
 
@@ -23,10 +27,11 @@ public partial class WeatherForecastListForm : ComponentBase
 
     [Inject] protected IAuthorizationService? AuthorizationService { get; set; }
 
+    private bool isLoading => this.ListViewService.Records is null;
+
     private WeatherForecastsViewService ListViewService => this._listViewService!;
     private WeatherForecastViewService RecordViewService => this._recordViewService!;
-
-    private bool isLoading => ListViewService.Records is null;
+    private WeatherForecastNotificationService NotificationService => this._notificationService!;
 
     public bool IsModal { get; set; }
 
@@ -34,11 +39,22 @@ public partial class WeatherForecastListForm : ComponentBase
 
     private ComponentState loadState => isLoading ? ComponentState.Loading : ComponentState.Loaded;
 
-    protected async override Task OnInitializedAsync()
+    private UIVirtualizeListControl<DcoWeatherForecast>? uiVirtualizeListControl;
+
+    protected override void OnInitialized()
     {
-        await this.ListViewService.GetForecastsAsync();
-        this.ListViewService.ListChanged += this.OnListChanged;
+        this.NotificationService.RecordSetChanged += this.OnRecordSetChanged;
     }
+
+    public async ValueTask<ItemsProviderResult<DcoWeatherForecast>> GetVirtualizedItems(ItemsProviderRequest request)
+    {
+        await this.ListViewService.GetForecastsAsync(request);
+        if (this.ListViewService.Records is null)
+            return new ItemsProviderResult<DcoWeatherForecast>(new List<DcoWeatherForecast>(), 0);
+
+        return new ItemsProviderResult<DcoWeatherForecast>(this.ListViewService.Records, this.ListViewService.RecordCount);
+    }
+
 
     private async Task DeleteRecord(Guid Id)
     {
@@ -117,8 +133,11 @@ public partial class WeatherForecastListForm : ComponentBase
         }
     }
 
-    private void OnListChanged(object? sender, EventArgs e)
-        => this.InvokeAsync(this.StateHasChanged);
+    private void OnRecordSetChanged(object? sender, EventArgs e)
+    { 
+        this.uiVirtualizeListControl?.NotifyListChanged();
+        this.InvokeAsync(this.StateHasChanged);
+    }
 
     protected virtual async Task<bool> CheckAuthorization(DcoWeatherForecast record, string policy)
     {
@@ -128,6 +147,6 @@ public partial class WeatherForecastListForm : ComponentBase
     }
 
     public void Dispose()
-        => this.ListViewService.ListChanged -= this.OnListChanged;
+        => this.NotificationService.RecordSetChanged -= this.OnRecordSetChanged;
 }
 

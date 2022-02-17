@@ -3,8 +3,6 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
-
 namespace Blazr.Template.Tests.DataBrokers
 {
     public partial class WeatherForecastDataBrokerTests
@@ -21,9 +19,10 @@ namespace Blazr.Template.Tests.DataBrokers
             var records = WeatherForecastDataStore.CreateTestForecasts(noOfRecords);
             weatherForecastDataStore.OverrideWeatherForecastDateSet(records);
             var dataBroker = new WeatherForecastServerDataBroker(weatherForecastDataStore: weatherForecastDataStore);
+            var options = new ListOptions();
 
             // test
-            var retrievedRecords = await dataBroker.GetWeatherForecastsAsync(Guid.NewGuid());
+            var retrievedRecords = await dataBroker.GetWeatherForecastsAsync(Guid.NewGuid(), options);
             var retrievedRecordCount = retrievedRecords.Count;
 
             // assert

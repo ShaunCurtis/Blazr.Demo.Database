@@ -19,6 +19,8 @@ namespace Blazr.Demo.Database.Core
 
         public ValueTask<bool> DeleteForecastAsync(Guid transactionId, Guid Id);
 
-        public ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId);
+        public ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId, ListOptions options);
+
+        public ValueTask<int> GetWeatherForecastCountAsync(Guid transactionId);
     }
 }

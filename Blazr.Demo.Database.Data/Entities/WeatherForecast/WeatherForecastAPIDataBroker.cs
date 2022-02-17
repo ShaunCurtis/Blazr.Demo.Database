@@ -17,14 +17,13 @@ namespace Blazr.Demo.Database.Data;
 /// </summary>
 public class WeatherForecastAPIDataBroker : IWeatherForecastDataBroker
 {
-    private readonly HttpClient? _httpClient;
-    private HttpClient httpClient => _httpClient!;
+    private readonly HttpClient httpClient;
     private readonly IClientAuthenticationService clientAuthenticationService;
     private readonly ResponseMessageStore _responseMessageStore;
 
     public WeatherForecastAPIDataBroker(HttpClient httpClient, IClientAuthenticationService clientAuthenticationService, ResponseMessageStore responseMessageStore)
     {
-        this._httpClient = httpClient!;
+        this.httpClient = httpClient!;
         this.clientAuthenticationService = clientAuthenticationService;
         this._responseMessageStore = responseMessageStore;
     }
@@ -73,19 +72,31 @@ public class WeatherForecastAPIDataBroker : IWeatherForecastDataBroker
         return record ?? new DcoWeatherForecast();
     }
 
-    public async ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId)
+    public async ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId, ListOptions options)
     {
         var list = new List<DcoWeatherForecast>();
 
         this.AddJWTTokenAuthorization();
-        var response = await this.httpClient.GetAsync($"/api/weatherforecast/list");
+        var response = await this.httpClient.PostAsJsonAsync<ListOptions>($"/api/weatherforecast/list", options) ;
         this.AddMessageToMessageStore(transactionId, response);
         if (response.IsSuccessStatusCode)
         {
-            var content = await response.Content.ReadAsStringAsync();
-            list = JsonSerializer.Deserialize<List<DcoWeatherForecast>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            list = await response.Content.ReadFromJsonAsync<List<DcoWeatherForecast>>();
         }
         return list ?? new();
+    }
+
+    public async ValueTask<int> GetWeatherForecastCountAsync(Guid transactionId)
+    {
+        var ret = 0;
+        this.AddJWTTokenAuthorization();
+        var response = await this.httpClient.GetAsync($"/api/weatherforecast/listcount");
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+             ret = JsonSerializer.Deserialize<int>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        }
+        return ret;
     }
 
     private void AddJWTTokenAuthorization()

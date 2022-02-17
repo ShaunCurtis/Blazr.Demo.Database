@@ -1,7 +1,15 @@
 ﻿@implements IDisposable
 @namespace Blazr.Demo.Database.UI
 
-<UIListControl TRecord=DcoWeatherForecast Records=this.ListViewService.Records LoadState=this.loadState class="table">
+<UIContainer Size=BootstrapSize.Fluid>
+    <UIFormRow>
+        <UIColumn Columns=12 class="text-end">
+            <UIAuthorizeButton Policy=@AppPolicies.IsViewer class="btn-dark btn-sm" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
+        </UIColumn>
+    </UIFormRow>
+</UIContainer>
+
+<UIVirtualizeListControl TRecord=DcoWeatherForecast ItemsProvider=this.ListViewService.GetForecastsAsync @ref=this.uiVirtualizeListControl class="table">
     <RowTemplate>
         <UIListColumn HeaderTitle="Date">@context.Date.ToShortDateString()</UIListColumn>
         <UIListColumn HeaderTitle="Temp &deg;C">@context.TemperatureC</UIListColumn>
@@ -13,15 +21,7 @@
             <UIAuthorizeRecordButton Record=context Policy=@AppPolicies.IsEditor type="button" class="btn-sm btn-danger" ClickEvent="() => this.DeleteRecord(context.Id)">Delete</UIAuthorizeRecordButton>
         </UIListColumn>
     </RowTemplate>
-</UIListControl>
-
-<UIContainer Size=BootstrapSize.Fluid>
-    <UIFormRow>
-        <UIColumn Columns=12 class="text-end">
-            <UIAuthorizeButton Policy=@AppPolicies.IsViewer class="btn-dark" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
-        </UIColumn>
-    </UIFormRow>
-</UIContainer>
+</UIVirtualizeListControl>
 
 <UIDisplay Display=this.IsModal>
     <BaseModalDialog @ref="this.modalDialog"></BaseModalDialog>

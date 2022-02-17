@@ -2,6 +2,7 @@
 global using System.Threading.Tasks;
 
 global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 global using Blazr.Core;
 

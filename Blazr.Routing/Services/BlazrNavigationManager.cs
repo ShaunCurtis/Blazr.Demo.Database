@@ -10,7 +10,7 @@ public class BlazrNavigationManager : NavigationManager, IBlazrNavigationManager
 {
     private NavigationManager _baseNavigationManager;
     private bool _isBlindNavigation = false;
-        
+
     public bool IsLocked { get; protected set; } = false;
 
     public event EventHandler<BlazrNavigationEventArgs>? NavigationEventBlocked;
@@ -81,6 +81,12 @@ public class BlazrNavigationManager : NavigationManager, IBlazrNavigationManager
         }
         return this.IsLocked;
     }
+
+    protected override void NavigateToCore(string uri, bool forceLoad)
+        => _baseNavigationManager.NavigateTo(uri, forceLoad);
+    
+    protected override void EnsureInitialized()
+    => base.Initialize(_baseNavigationManager.BaseUri, _baseNavigationManager.Uri);
 
     protected void NotifyNavigationEventBlocked(object? sender, BlazrNavigationEventArgs e)
         => this.NavigationEventBlocked?.Invoke(sender, e);
