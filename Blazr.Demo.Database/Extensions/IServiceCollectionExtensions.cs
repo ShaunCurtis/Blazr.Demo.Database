@@ -11,8 +11,8 @@ public static class IServiceCollectionExtensions
     public static void AddAppBlazorWASMServices(this IServiceCollection services)
     {
         services.AddScoped<IWeatherForecastDataBroker, WeatherForecastAPIDataBroker>();
-        services.AddScoped<WeatherForecastViewService>();
-        services.AddScoped<WeatherForecastsViewService>();
+        services.AddScoped<WeatherForecastCrudService>();
+        services.AddScoped<WeatherForecastListService>();
         services.AddBlazrNavigationManager();
         services.AddSingleton<ResponseMessageStore>();
     }

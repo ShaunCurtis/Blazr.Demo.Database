@@ -10,12 +10,12 @@ namespace Blazr.Demo.Database.UI;
 
 public partial class WeatherForecastEditForm : BaseEditForm<DcoWeatherForecast>, IDisposable
 {
-    private WeatherForecastViewService viewService => _viewService!;
-    private WeatherForecastViewService? _viewService;
+    private WeatherForecastCrudService viewService => _viewService!;
+    private WeatherForecastCrudService? _viewService;
 
     protected async override Task OnInitializedAsync()
     {
-        _viewService = ScopedServices.GetService(typeof(WeatherForecastViewService)) as WeatherForecastViewService;
+        _viewService = ScopedServices.GetService(typeof(WeatherForecastCrudService)) as WeatherForecastCrudService;
 
         base.LoadState = ComponentState.Loading;
         await this.viewService.GetForecastAsync(Id);

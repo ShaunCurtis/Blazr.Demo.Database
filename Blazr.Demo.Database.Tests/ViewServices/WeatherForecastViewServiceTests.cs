@@ -17,24 +17,20 @@ namespace Blazr.Template.Tests.ViewServices
         {
             // define
             var dataBrokerMock = new Mock<IWeatherForecastDataBroker>();
-            WeatherForecastsViewService? weatherForecastsViewService = new WeatherForecastsViewService(weatherForecastDataBroker: dataBrokerMock.Object);
+            var notificationService = new WeatherForecastNotificationService();
+            WeatherForecastListService? weatherForecastsViewService = new WeatherForecastListService(weatherForecastDataBroker: dataBrokerMock.Object, weatherForecastNotificationService: notificationService);
 
             dataBrokerMock.Setup(item =>
-                item.GetWeatherForecastsAsync(Guid.NewGuid()))
+                item.GetWeatherForecastsAsync(Guid.NewGuid(), new ListOptions() ))
                .Returns(this.GetWeatherForecastListAsync(noOfRecords));
-            object? eventSender = null;
-            object? eventargs = null;
-            weatherForecastsViewService.ListChanged += (sender, e) => { eventSender = sender; eventargs = e; };
 
             // test
-            await weatherForecastsViewService.GetForecastsAsync();
+            await weatherForecastsViewService.GetForecastsAsync(new ListOptions());
 
             // assert
             Assert.IsType<List<DcoWeatherForecast>?>(weatherForecastsViewService.Records);
             Assert.Equal(expectedCount, weatherForecastsViewService.Records!.Count);
-            Assert.IsType<List<DcoWeatherForecast>?>(eventSender);
-            Assert.IsType<EventArgs>(eventargs);
-            dataBrokerMock.Verify(item => item.GetWeatherForecastsAsync(Guid.NewGuid()), Times.Once);
+            dataBrokerMock.Verify(item => item.GetWeatherForecastsAsync(Guid.NewGuid(), new ListOptions()), Times.Once);
             dataBrokerMock.VerifyNoOtherCalls();
         }
     }

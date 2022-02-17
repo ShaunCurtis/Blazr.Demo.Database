@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Blazr.Demo.Database.Core\Blazr.Demo.Database.Core.csproj" />
     <ProjectReference Include="..\Blazr.Demo.Database.Data\Blazr.Demo.Database.Data.csproj" />
     <ProjectReference Include="..\Blazr.Routing\Blazr.Routing.csproj" />
+    <ProjectReference Include="..\Blazr.UI\Blazr.UI.csproj" />
   </ItemGroup>
 
 </Project>

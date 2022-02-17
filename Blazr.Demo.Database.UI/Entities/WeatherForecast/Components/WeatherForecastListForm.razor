@@ -1,6 +1,17 @@
 ﻿@implements IDisposable
 @namespace Blazr.Demo.Database.UI
 
+<UIContainer Size=BootstrapSize.Fluid>
+    <UIFormRow>
+        <UIColumn Columns=12 LargeColumns=8 class="text-start">
+            <PagingControl @ref=this.pagingControl PagingProvider=this.GetPagedItems />
+        </UIColumn>
+        <UIColumn Columns=12 LargeColumns=4 class="text-end">
+            <UIAuthorizeButton Policy=@AppPolicies.IsViewer class="btn-dark btn-sm" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
+        </UIColumn>
+    </UIFormRow>
+</UIContainer>
+
 <UIListControl TRecord=DcoWeatherForecast Records=this.ListViewService.Records LoadState=this.loadState class="table">
     <RowTemplate>
         <UIListColumn HeaderTitle="Date">@context.Date.ToShortDateString()</UIListColumn>
@@ -14,14 +25,6 @@
         </UIListColumn>
     </RowTemplate>
 </UIListControl>
-
-<UIContainer Size=BootstrapSize.Fluid>
-    <UIFormRow>
-        <UIColumn Columns=12 class="text-end">
-            <UIAuthorizeButton Policy=@AppPolicies.IsViewer class="btn-dark" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
-        </UIColumn>
-    </UIFormRow>
-</UIContainer>
 
 <UIDisplay Display=this.IsModal>
     <BaseModalDialog @ref="this.modalDialog"></BaseModalDialog>

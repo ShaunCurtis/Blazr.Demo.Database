@@ -6,5 +6,6 @@
 
 namespace Blazr.UI.Bootstrap;
 
-public delegate Task ChangeListPage(int startRecord, int pageSize);
+//TODO - Remove
+//public delegate Task ChangeListPage(int startRecord, int pageSize);
 
