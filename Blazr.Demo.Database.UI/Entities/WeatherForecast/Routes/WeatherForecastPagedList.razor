@@ -1,0 +1,12 @@
+﻿@page "/weatherforecast/pagedlist"
+@namespace Blazr.Demo.Database.UI
+@attribute [Authorize(Policy = "IsVisitor")]
+
+<WeatherForecastListHeader />
+
+<WeatherForecastListForm RouteId=RouteId />
+
+@code {
+    private static Guid RouteId = Guid.NewGuid();
+}
+

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Web.Virtualization;
-/// ============================================================
+﻿/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
@@ -9,33 +8,39 @@ namespace Blazr.Demo.Database.UI;
 
 public partial class WeatherForecastVirtualizeListForm : ComponentBase
 {
+    private bool _firstLoad;
+    private IModalDialog? modalDialog;
+
     [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
 
-    [Inject] private WeatherForecastsViewService? _listViewService { get; set; }
+    [Inject] private WeatherForecastListService? _listViewService { get; set; }
 
-    [Inject] private WeatherForecastViewService? _recordViewService { get; set; }
+    [Inject] private WeatherForecastCrudService? _recordViewService { get; set; }
 
     [Inject] private WeatherForecastNotificationService? _notificationService { get; set; }
 
-    [Inject] private NavigationManager? navigationManager { get; set; }
+    [Inject] private NavigationManager? _navigationManager { get; set; }
 
-    [Inject] private ToasterService? toasterService { get; set; }
+    [Inject] private ToasterService? _toasterService { get; set; }
 
-    [Inject] private ResponseMessageStore? ResponseMessageStore { get; set; }
+    [Inject] private ResponseMessageStore? _responseMessageStore { get; set; }
 
-    [Inject] private IClientAuthenticationService? clientAuthenticationService { get; set; }
+    [Inject] private IClientAuthenticationService? _clientAuthenticationService { get; set; }
 
-    [Inject] protected IAuthorizationService? AuthorizationService { get; set; }
+    [Inject] protected IAuthorizationService? _authorizationService { get; set; }
 
     private bool isLoading => this.ListViewService.Records is null;
 
-    private WeatherForecastsViewService ListViewService => this._listViewService!;
-    private WeatherForecastViewService RecordViewService => this._recordViewService!;
+    private WeatherForecastListService ListViewService => this._listViewService!;
+    private WeatherForecastCrudService RecordViewService => this._recordViewService!;
     private WeatherForecastNotificationService NotificationService => this._notificationService!;
+    private NavigationManager NavigationManager => _navigationManager!;
+    private ToasterService ToasterService => _toasterService!;
+    private ResponseMessageStore ResponseMessageStore => _responseMessageStore!;
+    private IClientAuthenticationService ClientAuthenticationService => _clientAuthenticationService!;
+    private IAuthorizationService AuthorizationService => _authorizationService!;
 
     public bool IsModal { get; set; }
-
-    private IModalDialog? modalDialog { get; set; }
 
     private ComponentState loadState => isLoading ? ComponentState.Loading : ComponentState.Loaded;
 
@@ -43,18 +48,15 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
 
     protected override void OnInitialized()
     {
+        _firstLoad = true;
         this.NotificationService.RecordSetChanged += this.OnRecordSetChanged;
     }
 
     public async ValueTask<ItemsProviderResult<DcoWeatherForecast>> GetVirtualizedItems(ItemsProviderRequest request)
     {
-        await this.ListViewService.GetForecastsAsync(request);
-        if (this.ListViewService.Records is null)
-            return new ItemsProviderResult<DcoWeatherForecast>(new List<DcoWeatherForecast>(), 0);
-
-        return new ItemsProviderResult<DcoWeatherForecast>(this.ListViewService.Records, this.ListViewService.RecordCount);
+        var result = await this.ListViewService.GetForecastsAsync(request);
+        return result;
     }
-
 
     private async Task DeleteRecord(Guid Id)
     {
@@ -62,13 +64,13 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
 
         if (this.RecordViewService.Record is null)
         {
-            toasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  the record does not exist", MessageColour.Danger, 30));
+            this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  the record does not exist", MessageColour.Danger, 30));
             return;
         }
 
         if (!await this.CheckAuthorization(this.RecordViewService.Record, AppPolicies.IsEditor))
         {
-            toasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  You do not have permissions to delete this record", MessageColour.Danger, 30));
+            this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  You do not have permissions to delete this record", MessageColour.Danger, 30));
             return;
         }
 
@@ -79,9 +81,9 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
         if (message is not null)
         {
             if (message.OK)
-                toasterService?.AddToast(Toast.NewTTD("Delete", $"Record Deleted.", MessageColour.Success, 5));
+                this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Record Deleted.", MessageColour.Success, 5));
             else
-                toasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+                this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
         }
     }
 
@@ -94,7 +96,7 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
             await this.modalDialog!.ShowAsync<WeatherForecastEditForm>(options);
         }
         else
-            this.navigationManager!.NavigateTo($"/WeatherForecast/Edit/{Id}");
+            this.NavigationManager.NavigateTo($"/WeatherForecast/Edit/{Id}");
     }
 
     private async Task ViewRecord(Guid Id)
@@ -106,18 +108,18 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
             await this.modalDialog!.ShowAsync<WeatherForecastViewForm>(options);
         }
         else
-            this.navigationManager!.NavigateTo($"/WeatherForecast/View/{Id}");
+            this.NavigationManager.NavigateTo($"/WeatherForecast/View/{Id}");
     }
 
     private async Task AddRecordAsync()
     {
-        var user = clientAuthenticationService?.GetCurrentIdentity();
+        var user = this.ClientAuthenticationService?.GetCurrentIdentity();
         var transactionId = Guid.NewGuid();
         var record = new DcoWeatherForecast
         {
             Date = DateTime.Now,
             Id = Guid.NewGuid(),
-            OwnerId = SessionTokenManagement.GetIdentityId(clientAuthenticationService?.GetCurrentIdentity()),
+            OwnerId = SessionTokenManagement.GetIdentityId(this.ClientAuthenticationService?.GetCurrentIdentity()),
             Summary = "Balmy",
             TemperatureC = 14
         };
@@ -127,14 +129,14 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
         if (message is not null)
         {
             if (message.OK)
-                toasterService?.AddToast(Toast.NewTTD("Add", $"Record added.", MessageColour.Success, 5));
+                this.ToasterService.AddToast(Toast.NewTTD("Add", $"Record added.", MessageColour.Success, 5));
             else
-                toasterService?.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+                this.ToasterService.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
         }
     }
 
     private void OnRecordSetChanged(object? sender, EventArgs e)
-    { 
+    {
         this.uiVirtualizeListControl?.NotifyListChanged();
         this.InvokeAsync(this.StateHasChanged);
     }

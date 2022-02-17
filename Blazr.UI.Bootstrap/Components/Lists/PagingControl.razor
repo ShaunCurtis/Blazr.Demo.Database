@@ -5,14 +5,13 @@
     /// ============================================================*@
 
 @namespace Blazr.UI.Bootstrap
-@typeparam TRecord
 
 <div class="m-2 p-2">
     @if (this.AreBlocks)
     {
         <div class="btn-group me-1" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(int.MinValue)">|&lt;</button>
-            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(-1)">&lt;&lt;</button>
+            <button type="button" class="btn btn-sm btn-dark" @onclick="() => this.MoveBlock(int.MinValue)">|&lt;</button>
+            <button type="button" class="btn btn-sm btn-dark" @onclick="() => this.MoveBlock(-1)">&lt;&lt;</button>
         </div>
     }
     <div class="btn-group" role="group" aria-label="Basic example">
@@ -20,14 +19,18 @@
         {
             var pageno = page;
             var viewpageno = page + 1;
-            <button type="button" class="btn @GetCss(pageno)" @onclick="() => this.GotToPage(pageno)">@viewpageno</button>
+            <button type="button" class="btn btn-sm @GetCss(pageno)" @onclick="() => this.GotToPage(pageno)">@viewpageno</button>
         }
     </div>
     @if (this.AreBlocks)
     {
         <div class="btn-group ms-1" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(1)">&gt;&gt;</button>
-            <button type="button" class="btn btn-dark" @onclick="() => this.MoveBlock(int.MaxValue)">&gt;|</button>
+            <button type="button" class="btn btn-sm btn-dark" @onclick="() => this.MoveBlock(1)">&gt;&gt;</button>
+            <button type="button" class="btn btn-sm btn-dark" @onclick="() => this.MoveBlock(int.MaxValue)">&gt;|</button>
         </div>
+    }
+    @if (this.ShowPageOf)
+    {
+        <span class="mx-2">Page @this.DisplayPage of @this.LastDisplayPage</span>
     }
 </div>

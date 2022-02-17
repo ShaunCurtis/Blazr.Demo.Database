@@ -5,10 +5,10 @@
 /// ============================================================
 namespace Blazr.Demo.Database.Core;
 
-public class WeatherForecastViewService
+public class WeatherForecastCrudService
 {
     private readonly IWeatherForecastDataBroker? weatherForecastDataBroker;
-    private readonly WeatherForecastsViewService weatherForecastsViewService;
+    private readonly WeatherForecastListService weatherForecastsViewService;
     private readonly WeatherForecastNotificationService weatherForecastNotificationService;
     private readonly ResponseMessageStore responseMessageStore;
 
@@ -16,7 +16,7 @@ public class WeatherForecastViewService
 
     public DeoWeatherForecast EditModel { get; private set; } = new DeoWeatherForecast();
 
-    public WeatherForecastViewService(IWeatherForecastDataBroker weatherForecastDataBroker, WeatherForecastsViewService weatherForecastsViewService, ResponseMessageStore responseMessageStore, WeatherForecastNotificationService weatherForecastNotificationService)
+    public WeatherForecastCrudService(IWeatherForecastDataBroker weatherForecastDataBroker, WeatherForecastListService weatherForecastsViewService, ResponseMessageStore responseMessageStore, WeatherForecastNotificationService weatherForecastNotificationService)
     {
         this.weatherForecastDataBroker = weatherForecastDataBroker!;
         this.weatherForecastsViewService = weatherForecastsViewService;

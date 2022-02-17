@@ -13,7 +13,7 @@ public class ListOptions
 
     public string SortExpression { get; set; } = String.Empty;
 
-    public int PageSize { get; set; } = 1000 ;
+    public int PageSize { get; set; } = 1000;
 
     public int StartRecord { get; set; } = 0;
 
@@ -21,15 +21,27 @@ public class ListOptions
 
     public bool IsPaging => (PageSize > 0);
 
-    public int Page => StartRecord / PageSize;
+    public int Page
+    {
+        get =>  StartRecord / PageSize;
+        set => StartRecord = value * PageSize;
+    }
+
+    public ListOptions GetCopy(int listcount)
+    {
+        var copy = this.Copy;
+        copy.ListCount = listcount;
+        return copy;
+    }  
 
     public ListOptions Copy
-        =>  new ListOptions() { 
-            ListCount = this.ListCount, 
-            FilterExpression = this.FilterExpression, 
-            SortExpression = this.SortExpression, 
-            PageSize = this.PageSize, 
-            StartRecord = this.StartRecord 
+        => new ListOptions()
+        {
+            ListCount = this.ListCount,
+            FilterExpression = this.FilterExpression,
+            SortExpression = this.SortExpression,
+            PageSize = this.PageSize,
+            StartRecord = this.StartRecord
         };
 }
 

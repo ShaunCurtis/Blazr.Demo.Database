@@ -9,7 +9,7 @@
     </UIFormRow>
 </UIContainer>
 
-<UIVirtualizeListControl TRecord=DcoWeatherForecast ItemsProvider=this.ListViewService.GetForecastsAsync @ref=this.uiVirtualizeListControl class="table">
+<UIVirtualizeListControl TRecord=DcoWeatherForecast ItemsProvider=this.GetVirtualizedItems @ref=this.uiVirtualizeListControl class="table">
     <RowTemplate>
         <UIListColumn HeaderTitle="Date">@context.Date.ToShortDateString()</UIListColumn>
         <UIListColumn HeaderTitle="Temp &deg;C">@context.TemperatureC</UIListColumn>

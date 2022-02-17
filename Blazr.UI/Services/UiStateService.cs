@@ -7,27 +7,27 @@
 namespace Blazr.UI;
 public class UiStateService
 {
-    private Dictionary<Type, ListOptions> _listOptions = new Dictionary<Type, ListOptions>();
+    private Dictionary<Guid, object> _stateItems = new Dictionary<Guid, object>();
 
-    public void AddListOptionsData(Type type, ListOptions value)
+    public void AddStateData(Guid Id, object value) 
     {
-        if (_listOptions.ContainsKey(type))
-            _listOptions[type] = value;
+        if (_stateItems.ContainsKey(Id))
+            _stateItems[Id] = value;
         else
-            _listOptions.Add(type, value);
+            _stateItems.Add(Id, value);
     }
 
-    public void ClearListOptionsData(Type type)
+    public void ClearStateDataData(Guid Id)
     {
-        if (_listOptions.ContainsKey(type))
-            _listOptions.Remove(type);
+        if (_stateItems.ContainsKey(Id))
+            _stateItems.Remove(Id);
     }
 
-    public bool TryGetListOptionsData(Type type, out ListOptions value)
+    public bool TryGetStateData(Guid Id, out object value)
     {
-        var isdata = _listOptions.ContainsKey(type);
+        var isdata = _stateItems.ContainsKey(Id);
         value = isdata
-            ? _listOptions[type]
+            ? _stateItems[Id]
             : new ListOptions();
         return isdata;
     }
