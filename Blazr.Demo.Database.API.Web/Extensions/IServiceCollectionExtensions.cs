@@ -39,8 +39,8 @@ public static class IServiceCollectionExtensions
     public static void AddAppBlazorServerAuthorizationServices(this WebApplicationBuilder builder)
     {
         var services = builder.Services;
-        services.AddSingleton<IAuthorizationHandler, WeatherForecastOwnerAuthorizationHandler>();
-        services.AddSingleton<IAuthorizationHandler, WeatherForecastEditorAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, RecordOwnerAuthorizationHandler>();
+        services.AddSingleton<IAuthorizationHandler, RecordEditorAuthorizationHandler>();
         services.AddAuthorization(config =>
         {
             foreach (var policy in SimpleJWTPolicies.Policies)

@@ -5,15 +5,14 @@
 /// ============================================================
 namespace Blazr.UI.Bootstrap;
 
-public class UIAuthorizeRecordButton<TRecord> : UIAuthorizeButton
+public class UIAuthorizeRecordButton : UIAuthorizeButton
 {
-
-    [Parameter] public TRecord? Record { get; set; }
+    [Parameter] public object? AuthFields { get; set; }
 
     protected override async Task<bool> CheckPolicy()
     {
         var state = await AuthTask!;
-        var result = await this.authorizationService!.AuthorizeAsync(state.User, Record, Policy);
+        var result = await this.authorizationService!.AuthorizeAsync(state.User, AuthFields, Policy);
         return result.Succeeded;
     }
 }

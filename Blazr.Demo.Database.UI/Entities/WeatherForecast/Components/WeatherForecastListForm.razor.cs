@@ -45,6 +45,8 @@ public partial class WeatherForecastListForm : ComponentBase
     private IAuthorizationService AuthorizationService => _authorizationService!;
     private UiStateService UiStateService => _uiStateService!;
 
+    public ListContext listContext = new ListContext();
+    
     private bool isLoading => ListViewService.Records is null;
 
     private ComponentState loadState => isLoading ? ComponentState.Loading : ComponentState.Loaded;
@@ -52,7 +54,17 @@ public partial class WeatherForecastListForm : ComponentBase
     protected override void OnInitialized()
     { 
         _firstLoad = true;
+        this.listContext.Attach(_uiStateService, this.RouteId, this.GetPagedItems);
         this.NotificationService.RecordSetChanged += this.OnListChanged;
+    }
+
+    public async ValueTask<PagingOptions> GetPagedItems(PagingOptions request)
+    {
+        var listOptions = new ListOptions { PageSize = request.PageSize, StartRecord = request.StartRecord };
+        var options = await this.ListViewService.GetForecastsAsync(this.GetState(listOptions));
+        await this.InvokeAsync(StateHasChanged);
+        this.SaveState(options);
+        return new PagingOptions { PageSize = options.PageSize, StartRecord = options.StartRecord, ListCount = options.ListCount };
     }
 
     public async ValueTask<ListOptions> GetPagedItems(ListOptions request)
@@ -70,11 +82,19 @@ public partial class WeatherForecastListForm : ComponentBase
     }
 
     private ListOptions GetState(ListOptions options)
-    { 
-        var returnOptions = _firstLoad && this.RouteId != Guid.Empty && this.UiStateService.TryGetStateData(this.RouteId, out object stateOptions)
-            ? (ListOptions)stateOptions
-            : options;
+    {
+        ListOptions? returnOptions = null;
+        if (this.RouteId != Guid.Empty && this.UiStateService.TryGetStateData(this.RouteId, out object stateOptions) && stateOptions is ListOptions)
+        {
+            returnOptions = (stateOptions as ListOptions)!.Copy;
+            if (!_firstLoad)
+            {
+                returnOptions.StartRecord = options.StartRecord;
+                returnOptions.PageSize = options.PageSize;
+            }
+        }
         _firstLoad = false;
+        returnOptions ??= options;
         return returnOptions;
     }
 
@@ -84,13 +104,13 @@ public partial class WeatherForecastListForm : ComponentBase
 
         if (this.RecordViewService.Record is null)
         {
-            this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  the record does not exist", MessageColour.Danger, 30));
+            this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  the record does not exist", MessageColour.Danger, 9));
             return;
         }
 
         if (!await this.CheckAuthorization(this.RecordViewService.Record, AppPolicies.IsEditor))
         {
-            this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  You do not have permissions to delete this record", MessageColour.Danger, 30));
+            this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  You do not have permissions to delete this record", MessageColour.Danger, 9));
             return;
         }
 
@@ -101,9 +121,9 @@ public partial class WeatherForecastListForm : ComponentBase
         if (message is not null)
         {
             if (message.OK)
-                this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Record Deleted.", MessageColour.Success, 5));
+                this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Record Deleted.", MessageColour.Success, 3));
             else
-                this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+                this.ToasterService?.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  Server response: {message.Message}", MessageColour.Danger, 9));
         }
     }
 
@@ -138,7 +158,7 @@ public partial class WeatherForecastListForm : ComponentBase
         var record = new DcoWeatherForecast
         {
             Date = DateTime.Now,
-            Id = Guid.NewGuid(),
+            WeatherForecastId = Guid.NewGuid(),
             OwnerId = SessionTokenManagement.GetIdentityId(this.ClientAuthenticationService?.GetCurrentIdentity()),
             Summary = "Balmy",
             TemperatureC = 14
@@ -149,9 +169,9 @@ public partial class WeatherForecastListForm : ComponentBase
         if (message is not null)
         {
             if (message.OK)
-                this.ToasterService?.AddToast(Toast.NewTTD("Add", $"Record added.", MessageColour.Success, 5));
+                this.ToasterService?.AddToast(Toast.NewTTD("Add", $"Record added.", MessageColour.Success, 3));
             else
-                this.ToasterService?.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+                this.ToasterService?.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 9));
         }
     }
 
@@ -164,9 +184,12 @@ public partial class WeatherForecastListForm : ComponentBase
     protected virtual async Task<bool> CheckAuthorization(DcoWeatherForecast record, string policy)
     {
         var state = await AuthTask!;
-        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, record, policy);
+        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, new AppAuthFields { OwnerId = record.OwnerId }, policy);
         return result.Succeeded;
     }
+
+    protected AppAuthFields GetAuthFields(DvoWeatherForecast record)
+        => new AppAuthFields { OwnerId = record.OwnerId };
 
     public void Dispose()
         => this.NotificationService.RecordSetChanged -= this.OnListChanged;

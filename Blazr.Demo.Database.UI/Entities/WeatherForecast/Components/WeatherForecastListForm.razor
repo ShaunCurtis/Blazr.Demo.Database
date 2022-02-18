@@ -1,31 +1,36 @@
 ﻿@implements IDisposable
 @namespace Blazr.Demo.Database.UI
 
-<UIContainer Size=BootstrapSize.Fluid>
-    <UIFormRow>
-        <UIColumn Columns=12 LargeColumns=8 class="text-start">
-            <PagingControl @ref=this.pagingControl PagingProvider=this.GetPagedItems />
-        </UIColumn>
-        <UIColumn Columns=12 LargeColumns=4 class="text-end">
-            <UIAuthorizeButton Policy=@AppPolicies.IsViewer class="btn-dark btn-sm" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
-        </UIColumn>
-    </UIFormRow>
-</UIContainer>
+<ListForm ListContext=listContext>
+    <UIContainer Size=BootstrapSize.Fluid>
+        <UIFormRow>
+            <UIColumn Columns=12 LargeColumns=10 class="text-start">
+                <PagingControl @ref=this.pagingControl PagingProvider=this.GetPagedItems />
+            </UIColumn>
+            <UIColumn Columns=2 LargeColumns=2 class="text-end">
+                <UIAuthorizeButton Policy=@AppPolicies.IsViewer class="btn-dark btn-sm" ClickEvent="AddRecordAsync">Add Random Record</UIAuthorizeButton>
+            </UIColumn>
+        </UIFormRow>
+    </UIContainer>
 
-<UIListControl TRecord=DvoWeatherForecast Records=this.ListViewService.Records LoadState=this.loadState class="table">
-    <RowTemplate>
-        <UIListColumn HeaderTitle="Date">@context.Date.ToShortDateString()</UIListColumn>
-        <UIListColumn HeaderTitle="Temp &deg;C">@context.TemperatureC</UIListColumn>
-        <UIListColumn HeaderTitle="Temp &deg;F">@context.TemperatureF</UIListColumn>
-        <UIListColumn IsMaxColumn=true HeaderTitle="Summary">@context.Summary</UIListColumn>
-        <UIListColumn HeaderTitle="Edit/View" NoWrap="true">
-            <UIAuthorizeRecordButton Record=context Policy=@AppPolicies.IsViewer type="button" class="btn-sm btn-secondary" ClickEvent="() => this.ViewRecord(context.Id)">View</UIAuthorizeRecordButton>
-            <UIAuthorizeRecordButton Record=context Policy=@AppPolicies.IsEditor type="button" class="btn-sm btn-primary" ClickEvent="() => this.EditRecord(context.Id)">Edit</UIAuthorizeRecordButton>
-            <UIAuthorizeRecordButton Record=context Policy=@AppPolicies.IsEditor type="button" class="btn-sm btn-danger" ClickEvent="() => this.DeleteRecord(context.Id)">Delete</UIAuthorizeRecordButton>
-        </UIListColumn>
-    </RowTemplate>
-</UIListControl>
+    <UIListControl TRecord=DvoWeatherForecast Records=this.ListViewService.Records LoadState=this.loadState class="table">
+        <RowTemplate>
+            <UIListColumn HeaderTitle="Date">@context.Date.ToShortDateString()</UIListColumn>
+            <UIListColumn HeaderTitle="Temp &deg;C">@context.TemperatureC</UIListColumn>
+            <UIListColumn HeaderTitle="Temp &deg;F">@context.TemperatureF()</UIListColumn>
+            <UIListColumn HeaderTitle="Owner">@context.OwnerName</UIListColumn>
+            <UIListColumn IsMaxColumn=true HeaderTitle="Summary">@context.Summary</UIListColumn>
+            <UIListColumn HeaderTitle="Edit/View" NoWrap="true">
+                <UIButtonGroup>
+                    <UIAuthorizeRecordButton Policy=@AppPolicies.IsViewer type="button" AuthFields="this.GetAuthFields(context)" class="btn-sm btn-secondary" ClickEvent="() => this.ViewRecord(context.WeatherForecastId)">View</UIAuthorizeRecordButton>
+                    <UIAuthorizeRecordButton Policy=@AppPolicies.IsEditor type="button" AuthFields="this.GetAuthFields(context)" class="btn-sm btn-primary" ClickEvent="() => this.EditRecord(context.WeatherForecastId)">Edit</UIAuthorizeRecordButton>
+                    <UIAuthorizeRecordButton Policy=@AppPolicies.IsEditor type="button" AuthFields="this.GetAuthFields(context)" class="btn-sm btn-danger" ClickEvent="() => this.DeleteRecord(context.WeatherForecastId)">Delete</UIAuthorizeRecordButton>
+                </UIButtonGroup>
+            </UIListColumn>
+        </RowTemplate>
+    </UIListControl>
 
-<UIDisplay Display=this.IsModal>
-    <BaseModalDialog @ref="this.modalDialog"></BaseModalDialog>
-</UIDisplay>
+    <UIDisplay Display=this.IsModal>
+        <BaseModalDialog @ref="this.modalDialog"></BaseModalDialog>
+    </UIDisplay>
+</ListForm>

@@ -14,7 +14,7 @@ public class UIAuthorizeButton : UIComponent
     [Inject] protected IAuthorizationService? authorizationService { get; set; }
 
     public UIAuthorizeButton()
-        => this.CssClasses.Add("btn me-1");
+        => this.CssClasses.Add("btn");
 
     protected override void OnInitialized()
     {

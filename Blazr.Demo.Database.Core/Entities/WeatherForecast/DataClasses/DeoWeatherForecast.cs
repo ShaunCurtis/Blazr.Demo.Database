@@ -8,7 +8,7 @@ namespace Blazr.Demo.Database.Core
 {
     public class DeoWeatherForecast
     {
-        public Guid Id { get; set; } = GuidExtensions.Null;
+        public Guid WeatherForecastId { get; set; } = GuidExtensions.Null;
 
         public Guid OwnerId { get; set; }
 
@@ -16,15 +16,11 @@ namespace Blazr.Demo.Database.Core
 
         public int TemperatureC { get; set; }
 
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-
         public string Summary { get; set; } = String.Empty;
-
-        public bool IsNull => Id == GuidExtensions.Null;
 
         public void Populate(DcoWeatherForecast record)
         {
-            this.Id = record.Id;
+            this.WeatherForecastId = record.WeatherForecastId;
             this.OwnerId = record.OwnerId;
             this.Date = record.Date;
             this.Summary = record.Summary;
@@ -33,7 +29,7 @@ namespace Blazr.Demo.Database.Core
 
         public DcoWeatherForecast ToDco =>
             new DcoWeatherForecast() {
-                Id = this.Id,
+                WeatherForecastId = this.WeatherForecastId,
                 OwnerId = this.OwnerId,
                 Date = this.Date,
                 Summary = this.Summary,

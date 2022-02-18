@@ -20,7 +20,7 @@ public partial class WeatherForecastViewForm : BaseViewForm<DcoWeatherForecast>
         base.LoadState = ComponentState.Loading;
         await this.viewService.GetForecastAsync(Id);
 
-        if (!await this.CheckAuthorization(this.viewService.Record, AppPolicies.IsViewer))
+        if (!await this.CheckAuthorization(new AppAuthFields { OwnerId = this.viewService.Record.OwnerId }, AppPolicies.IsViewer))
         {
             LoadState = ComponentState.UnAuthorized;
             return;

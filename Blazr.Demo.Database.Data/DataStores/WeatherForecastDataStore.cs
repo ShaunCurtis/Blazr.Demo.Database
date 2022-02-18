@@ -29,7 +29,7 @@ namespace Blazr.Demo.Database.Data
             var rng = new Random();
             return Enumerable.Range(1, _recordsToGet).Select(index => new DboWeatherForecast
             {
-                Id = Guid.NewGuid(),
+                WeatherForecastId = Guid.NewGuid(),
                 OwnerId = Guid.Parse($"10000000-0000-0000-0000-00000000000{rng.Next(2, 4)}"),
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),
@@ -44,7 +44,7 @@ namespace Blazr.Demo.Database.Data
             {
                 list.Add(new DvoWeatherForecast
                 {
-                    WeatherForecastId = record.Id,
+                    WeatherForecastId = record.WeatherForecastId,
                     OwnerId = record.OwnerId,
                     Date = record.Date,
                     TemperatureC = record.TemperatureC,
@@ -66,7 +66,7 @@ namespace Blazr.Demo.Database.Data
 
         public ValueTask<bool> UpdateForecastAsync(DcoWeatherForecast weatherForecast)
         {
-            var record = _records.FirstOrDefault(item => item.Id == weatherForecast.Id);
+            var record = _records.FirstOrDefault(item => item.WeatherForecastId == weatherForecast.WeatherForecastId);
             if (record is not null)
                 _records.Remove(record);
             _records.Add(DboWeatherForecast.FromDto(weatherForecast));
@@ -84,14 +84,14 @@ namespace Blazr.Demo.Database.Data
 
         public ValueTask<DcoWeatherForecast> GetForecastAsync(Guid Id)
         {
-            var record = _records.FirstOrDefault(item => item.Id == Id);
+            var record = _records.FirstOrDefault(item => item.WeatherForecastId == Id);
             return ValueTask.FromResult(record?.ToDto() ?? new DcoWeatherForecast());
         }
 
         public ValueTask<bool> DeleteForecastAsync(Guid Id)
         {
             var deleted = false;
-            var record = _records.FirstOrDefault(item => item.Id == Id);
+            var record = _records.FirstOrDefault(item => item.WeatherForecastId == Id);
             if (record != null)
             {
                 _records.Remove(record);
@@ -142,7 +142,7 @@ namespace Blazr.Demo.Database.Data
             var rng = new Random();
             return Enumerable.Range(1, count).Select(index => new DcoWeatherForecast
             {
-                Id = Guid.NewGuid(),
+                WeatherForecastId = Guid.NewGuid(),
                 OwnerId = Guid.Parse($"10000000-0000-0000-0000-00000000000{rng.Next(2, 4)}"),
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = rng.Next(-20, 55),

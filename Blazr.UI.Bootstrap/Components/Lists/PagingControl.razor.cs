@@ -9,7 +9,7 @@ namespace Blazr.UI.Bootstrap;
 public partial class PagingControl
     : ComponentBase
 {
-    private ListOptions _listOptions => new ListOptions() { PageSize = this.PageSize, Page = this.Page };
+    private PagingOptions _pagingOptions => new PagingOptions() { PageSize = this.PageSize, StartRecord = this.ReadStartRecord };
     private int Page = 0;
     private int ListCount = 0;
 
@@ -17,19 +17,24 @@ public partial class PagingControl
 
     [Parameter] public int BlockSize { get; set; } = 10;
 
-    [Parameter] public Func<ListOptions, ValueTask<ListOptions>>? PagingProvider { get; set; }
+    [Parameter] public Func<PagingOptions, ValueTask<PagingOptions>>? PagingProvider { get; set; }
 
     [Parameter] public bool ShowPageOf { get; set; } = true;
 
+    [CascadingParameter] private ListContext? ListContext { get; set; }
+
     protected async override Task OnInitializedAsync()
     {
-        if (this.PagingProvider is not null)
-        {
-            var options = await PagingProvider(_listOptions);
-            this.Page = options.Page;
-            this.PageSize = options.PageSize;
-            this.ListCount = options.ListCount;
-        }
+        PagingOptions options = new();
+        if (this.ListContext is not null)
+            options = await this.ListContext.SetPagingState(_pagingOptions);
+
+        else if (this.PagingProvider is not null)
+            options = await PagingProvider(_pagingOptions);
+
+        this.Page = options.Page;
+        this.PageSize = options.PageSize;
+        this.ListCount = options.ListCount;
     }
 
     public async void NotifyListChanged()
@@ -70,14 +75,17 @@ public partial class PagingControl
 
     private async Task GotToPage()
     {
-        if (this.PagingProvider is not null)
-        {
-            var options = await PagingProvider(_listOptions);
-            this.Page = options.Page;
-            this.PageSize = options.PageSize;
-            this.ListCount = options.ListCount;
-            this.StateHasChanged();
-        }
+        PagingOptions options = new();
+        if (this.ListContext is not null)
+            options = await this.ListContext.SetPagingState(_pagingOptions);
+
+        else if (this.PagingProvider is not null)
+            options = await PagingProvider(_pagingOptions);
+
+        this.Page = options.Page;
+        this.PageSize = options.PageSize;
+        this.ListCount = options.ListCount;
+        this.StateHasChanged();
     }
 
     private string GetCss(int page)

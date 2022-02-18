@@ -14,7 +14,7 @@ public static class AppPolicies
     public static AuthorizationPolicy IsEditorPolicy
         => new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
-        .AddRequirements(new WeatherForecastEditorAuthorizationRequirement())
+        .AddRequirements(new RecordEditorAuthorizationRequirement())
         .Build();
 
     public static AuthorizationPolicy IsViewerPolicy

@@ -69,10 +69,10 @@ public partial class BaseEditForm<TRecord> : OwningComponentBase
     protected virtual void BaseExit()
         => this.NavManager?.NavigateTo("/");
 
-    protected virtual async Task<bool> CheckAuthorization(TRecord record, string policy)
+    protected virtual async Task<bool> CheckAuthorization(object data, string policy)
     {
         var state = await AuthTask!;
-        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, record, policy);
+        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, data, policy);
         return result.Succeeded;
     }
 }

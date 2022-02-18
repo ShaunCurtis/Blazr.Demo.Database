@@ -43,7 +43,7 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
 
     private ComponentState loadState => isLoading ? ComponentState.Loading : ComponentState.Loaded;
 
-    private UIVirtualizeListControl<DcoWeatherForecast>? uiVirtualizeListControl;
+    private UIVirtualizeListControl<DvoWeatherForecast>? uiVirtualizeListControl;
 
     protected override void OnInitialized()
     {
@@ -62,13 +62,13 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
 
         if (this.RecordViewService.Record is null)
         {
-            this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  the record does not exist", MessageColour.Danger, 30));
+            this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  the record does not exist", MessageColour.Danger, 9));
             return;
         }
 
         if (!await this.CheckAuthorization(this.RecordViewService.Record, AppPolicies.IsEditor))
         {
-            this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  You do not have permissions to delete this record", MessageColour.Danger, 30));
+            this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  You do not have permissions to delete this record", MessageColour.Danger, 9));
             return;
         }
 
@@ -79,9 +79,9 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
         if (message is not null)
         {
             if (message.OK)
-                this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Record Deleted.", MessageColour.Success, 5));
+                this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Record Deleted.", MessageColour.Success, 3));
             else
-                this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+                this.ToasterService.AddToast(Toast.NewTTD("Delete", $"Delete Failed.  Server response: {message.Message}", MessageColour.Danger, 9));
         }
     }
 
@@ -116,7 +116,7 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
         var record = new DcoWeatherForecast
         {
             Date = DateTime.Now,
-            Id = Guid.NewGuid(),
+            WeatherForecastId = Guid.NewGuid(),
             OwnerId = SessionTokenManagement.GetIdentityId(this.ClientAuthenticationService?.GetCurrentIdentity()),
             Summary = "Balmy",
             TemperatureC = 14
@@ -127,9 +127,9 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
         if (message is not null)
         {
             if (message.OK)
-                this.ToasterService.AddToast(Toast.NewTTD("Add", $"Record added.", MessageColour.Success, 5));
+                this.ToasterService.AddToast(Toast.NewTTD("Add", $"Record added.", MessageColour.Success, 3));
             else
-                this.ToasterService.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 30));
+                this.ToasterService.AddToast(Toast.NewTTD("Add", $"Add Failed.  Server response: {message.Message}", MessageColour.Danger, 10));
         }
     }
 
@@ -142,9 +142,12 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
     protected virtual async Task<bool> CheckAuthorization(DcoWeatherForecast record, string policy)
     {
         var state = await AuthTask!;
-        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, record, policy);
+        var result = await this.AuthorizationService!.AuthorizeAsync(state.User, new AppAuthFields { OwnerId = record.OwnerId }, policy);
         return result.Succeeded;
     }
+
+    protected AppAuthFields GetAuthFields(DvoWeatherForecast record)
+        => new AppAuthFields { OwnerId = record.OwnerId };
 
     public void Dispose()
         => this.NotificationService.RecordSetChanged -= this.OnRecordSetChanged;

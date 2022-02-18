@@ -19,8 +19,8 @@ public partial class WeatherForecastEditForm : BaseEditForm<DcoWeatherForecast>,
 
         base.LoadState = ComponentState.Loading;
         await this.viewService.GetForecastAsync(Id);
-        
-        if (!await this.CheckAuthorization(this.viewService.Record, AppPolicies.IsEditor))
+
+        if (!await this.CheckAuthorization(new AppAuthFields { OwnerId = this.viewService.Record.OwnerId }, AppPolicies.IsEditor))
         {
             LoadState = ComponentState.UnAuthorized;
             return;
@@ -55,7 +55,7 @@ public partial class WeatherForecastEditForm : BaseEditForm<DcoWeatherForecast>,
             new DcoWeatherForecast
             {
                 Date = DateTime.Now,
-                Id = Guid.NewGuid(),
+                WeatherForecastId = Guid.NewGuid(),
                 Summary = "Balmy",
                 TemperatureC = 14
             });

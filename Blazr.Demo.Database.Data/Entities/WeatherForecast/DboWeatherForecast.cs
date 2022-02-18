@@ -8,7 +8,7 @@ namespace Blazr.Demo.Database.Data
     internal record DboWeatherForecast
     {
         [Key]
-        public Guid Id { get; init; }
+        public Guid WeatherForecastId { get; init; }
 
         public Guid OwnerId { get; init; }
 
@@ -21,7 +21,7 @@ namespace Blazr.Demo.Database.Data
         public DcoWeatherForecast ToDto()
             => new DcoWeatherForecast
             {
-                Id = this.Id,
+                WeatherForecastId = this.WeatherForecastId,
                 OwnerId = this.OwnerId,
                 Date = this.Date,
                 TemperatureC = this.TemperatureC,
@@ -31,7 +31,7 @@ namespace Blazr.Demo.Database.Data
         public static DboWeatherForecast FromDto(DcoWeatherForecast record)
             => new DboWeatherForecast
             {
-                Id = record.Id,
+                WeatherForecastId = record.WeatherForecastId,
                 OwnerId = record.OwnerId, 
                 Date = record.Date,
                 TemperatureC = record.TemperatureC,
