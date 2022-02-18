@@ -27,7 +27,7 @@ namespace Blazr.Demo.Database.Data
         public async ValueTask<bool> UpdateForecastAsync(Guid transactionId, DcoWeatherForecast record)
             => await this.weatherForecastDataStore.UpdateForecastAsync(record);
 
-        public async ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId, ListOptions options)
+        public async ValueTask<List<DvoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId, ListOptions options)
             => await this.weatherForecastDataStore.GetWeatherForecastsAsync(options);
 
         public async ValueTask<int> GetWeatherForecastCountAsync(Guid transactionId)

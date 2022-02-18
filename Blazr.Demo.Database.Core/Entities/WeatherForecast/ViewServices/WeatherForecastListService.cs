@@ -11,7 +11,7 @@ public class WeatherForecastListService
     private readonly IWeatherForecastDataBroker weatherForecastDataBroker;
     private readonly WeatherForecastNotificationService weatherForecastNotificationService;
 
-    public List<DcoWeatherForecast>? Records { get; private set; }
+    public List<DvoWeatherForecast>? Records { get; private set; }
 
     public int RecordCount { get; private set; } = 0;
 
@@ -32,7 +32,7 @@ public class WeatherForecastListService
         return request.GetCopy(this.RecordCount);
     }
 
-    public async ValueTask<ItemsProviderResult<DcoWeatherForecast>> GetForecastsAsync(ItemsProviderRequest request)
+    public async ValueTask<ItemsProviderResult<DvoWeatherForecast>> GetForecastsAsync(ItemsProviderRequest request)
     {
         var isfirstLoad = this.Records is null || this.Records.Count == 0;
         var options = new ListOptions { PageSize = request.Count, StartRecord = request.StartIndex };
@@ -41,7 +41,7 @@ public class WeatherForecastListService
         this.RecordCount = await weatherForecastDataBroker.GetWeatherForecastCountAsync(Guid.NewGuid());
         if (isfirstLoad)
             this.weatherForecastNotificationService.NotifyRecordSetChanged(this, new RecordSetChangedEventArgs());
-        return new ItemsProviderResult<DcoWeatherForecast>(this.Records, this.RecordCount);
+        return new ItemsProviderResult<DvoWeatherForecast>(this.Records, this.RecordCount);
     }
 }
 

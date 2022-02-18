@@ -8,7 +8,6 @@ namespace Blazr.Demo.Database.UI;
 
 public partial class WeatherForecastVirtualizeListForm : ComponentBase
 {
-    private bool _firstLoad;
     private IModalDialog? modalDialog;
 
     [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
@@ -48,11 +47,10 @@ public partial class WeatherForecastVirtualizeListForm : ComponentBase
 
     protected override void OnInitialized()
     {
-        _firstLoad = true;
         this.NotificationService.RecordSetChanged += this.OnRecordSetChanged;
     }
 
-    public async ValueTask<ItemsProviderResult<DcoWeatherForecast>> GetVirtualizedItems(ItemsProviderRequest request)
+    public async ValueTask<ItemsProviderResult<DvoWeatherForecast>> GetVirtualizedItems(ItemsProviderRequest request)
     {
         var result = await this.ListViewService.GetForecastsAsync(request);
         return result;

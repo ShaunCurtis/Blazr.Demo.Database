@@ -16,10 +16,13 @@ namespace Blazr.Demo.Database.Data
         };
 
         private List<DboWeatherForecast> _records;
+        private Dictionary<Guid, string> _users;
 
         public WeatherForecastDataStore()
-            =>
+        {
             _records = GetForecasts();
+            _users = Getusers();
+        }
 
         private List<DboWeatherForecast> GetForecasts()
         {
@@ -32,6 +35,33 @@ namespace Blazr.Demo.Database.Data
                 TemperatureC = rng.Next(-20, 55),
                 Summary = Summaries[rng.Next(Summaries.Length)]
             }).ToList();
+        }
+
+        private List<DvoWeatherForecast> GetForecastView()
+        {
+            var list = new List<DvoWeatherForecast>();
+            foreach (var record in _records)
+            {
+                list.Add(new DvoWeatherForecast
+                {
+                    WeatherForecastId = record.Id,
+                    OwnerId = record.OwnerId,
+                    Date = record.Date,
+                    TemperatureC = record.TemperatureC,
+                    Summary = record.Summary ?? string.Empty,
+                    OwnerName = _users[record.OwnerId] ?? "Unknown",
+                });
+            }
+            return list;
+        }
+
+        private static Dictionary<Guid, string> Getusers()
+        {
+            var list = new Dictionary<Guid, string>();
+            list.Add(Guid.Parse($"10000000-0000-0000-0000-000000000001"), "Visitor");
+            list.Add(Guid.Parse($"10000000-0000-0000-0000-000000000002"), "User");
+            list.Add(Guid.Parse($"10000000-0000-0000-0000-000000000003"), "Administrator");
+            return list;
         }
 
         public ValueTask<bool> UpdateForecastAsync(DcoWeatherForecast weatherForecast)
@@ -70,28 +100,41 @@ namespace Blazr.Demo.Database.Data
             return ValueTask.FromResult(deleted);
         }
 
-        public ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(ListOptions options)
+        public ValueTask<List<DvoWeatherForecast>> GetWeatherForecastsAsync(ListOptions options)
         {
-            var recs = _records
+            var recs = GetForecastView()
                 .AsQueryable()
                 .OrderBy(item => item.Date)
                 .Skip(options.StartRecord)
                 .Take(options.PageSize)
                 .ToList();
 
-            var list = new List<DcoWeatherForecast>();
+            var list = new List<DvoWeatherForecast>();
             recs
-                .ForEach(item => list.Add(item.ToDto()));
+                .ForEach(item => list.Add(item with { }));
             return ValueTask.FromResult(list);
         }
 
         public ValueTask<int> GetWeatherForecastCountAsync()
-            =>  ValueTask.FromResult(_records.Count);
+            => ValueTask.FromResult(_records.Count);
 
         public void OverrideWeatherForecastDateSet(List<DcoWeatherForecast> list)
         {
             _records.Clear();
             list.ForEach(item => _records.Add(DboWeatherForecast.FromDto(item)));
+        }
+
+        public static List<DvoWeatherForecast> CreateTestViewForecasts(int count)
+        {
+            var rng = new Random();
+            return Enumerable.Range(1, count).Select(index => new DvoWeatherForecast
+            {
+                WeatherForecastId = Guid.NewGuid(),
+                OwnerId = Guid.Parse($"10000000-0000-0000-0000-00000000000{rng.Next(2, 4)}"),
+                Date = DateTime.Now.AddDays(index),
+                TemperatureC = rng.Next(-20, 55),
+                Summary = Summaries[rng.Next(Summaries.Length)]
+            }).ToList();
         }
 
         public static List<DcoWeatherForecast> CreateTestForecasts(int count)

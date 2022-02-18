@@ -72,16 +72,16 @@ public class WeatherForecastAPIDataBroker : IWeatherForecastDataBroker
         return record ?? new DcoWeatherForecast();
     }
 
-    public async ValueTask<List<DcoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId, ListOptions options)
+    public async ValueTask<List<DvoWeatherForecast>> GetWeatherForecastsAsync(Guid transactionId, ListOptions options)
     {
-        var list = new List<DcoWeatherForecast>();
+        var list = new List<DvoWeatherForecast>();
 
         this.AddJWTTokenAuthorization();
         var response = await this.httpClient.PostAsJsonAsync<ListOptions>($"/api/weatherforecast/list", options) ;
         this.AddMessageToMessageStore(transactionId, response);
         if (response.IsSuccessStatusCode)
         {
-            list = await response.Content.ReadFromJsonAsync<List<DcoWeatherForecast>>();
+            list = await response.Content.ReadFromJsonAsync<List<DvoWeatherForecast>>();
         }
         return list ?? new();
     }

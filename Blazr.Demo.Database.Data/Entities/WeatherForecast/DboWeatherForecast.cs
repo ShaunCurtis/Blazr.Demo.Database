@@ -3,12 +3,11 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
-
 namespace Blazr.Demo.Database.Data
 {
     internal record DboWeatherForecast
     {
+        [Key]
         public Guid Id { get; init; }
 
         public Guid OwnerId { get; init; }

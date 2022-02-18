@@ -12,7 +12,7 @@
     </UIFormRow>
 </UIContainer>
 
-<UIListControl TRecord=DcoWeatherForecast Records=this.ListViewService.Records LoadState=this.loadState class="table">
+<UIListControl TRecord=DvoWeatherForecast Records=this.ListViewService.Records LoadState=this.loadState class="table">
     <RowTemplate>
         <UIListColumn HeaderTitle="Date">@context.Date.ToShortDateString()</UIListColumn>
         <UIListColumn HeaderTitle="Temp &deg;C">@context.TemperatureC</UIListColumn>
