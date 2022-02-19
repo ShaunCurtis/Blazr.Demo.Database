@@ -10,19 +10,29 @@
 
 @if (this.IsHeader)
 {
+    @if(_isSortField)
+    {
+    <th class="@this.HeaderCss" @onclick="SortClick">
+        <span class="@SortIconCss"></span>
+        @((MarkupString)this.HeaderTitle)
+    </th>
+    }
+    else
+    {
     <th class="@this.HeaderCss">
         @((MarkupString)this.HeaderTitle)
     </th>
+    }
 }
 else if (this.isMaxRowColumn)
 {
-<td class="@this.TDCss" @attributes="this.SplatterAttributes">
-    <div class="grid-overflow">
-        <div class="grid-overflowinner">
-            @ChildContent
+    <td class="@this.TDCss" @attributes="this.SplatterAttributes">
+        <div class="grid-overflow">
+            <div class="grid-overflowinner">
+                @ChildContent
+            </div>
         </div>
-    </div>
-</td>
+    </td>
 }
 else
 {

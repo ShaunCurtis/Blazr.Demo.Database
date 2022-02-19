@@ -9,9 +9,9 @@ namespace Blazr.Core;
 
 public class ListOptions
 {
-    public string FilterExpression { get; set; } = string.Empty;
+    public string? FilterExpression { get; set; }
 
-    public string SortExpression { get; set; } = String.Empty;
+    public string? SortExpression { get; set; }
 
     public int PageSize { get; set; } = 1000;
 
@@ -33,6 +33,8 @@ public class ListOptions
         StartRecord = StartRecord,
         ListCount = ListCount
     };
+
+    public SortOptions SortOptions => SortOptions.GetSortOptions(this);
 
     public ListOptions GetCopy(int listcount)
     {
@@ -63,4 +65,3 @@ public class ListOptions
         this.StartRecord = options.StartRecord;
     }
 }
-

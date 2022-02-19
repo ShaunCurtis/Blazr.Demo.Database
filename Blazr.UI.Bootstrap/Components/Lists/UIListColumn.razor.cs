@@ -8,38 +8,37 @@ namespace Blazr.UI.Bootstrap;
 
 public partial class UIListColumn : UIComponentBase
 {
-    [CascadingParameter(Name = "IsHeader")] public bool IsHeader { get; set; }
-    [CascadingParameter] private ListContext? _listContext { get; set; }
-    [Parameter] public bool IsMaxColumn { get; set; }
-    [Parameter] public string HeaderTitle { get; set; } = string.Empty;
-    [Parameter] public bool IsHeaderNoWrap { get; set; }
-    [Parameter] public bool NoWrap { get; set; }
-    [Parameter] public string SortField { get; set; } = string.Empty;
-
     private bool isMaxRowColumn => IsMaxColumn && !this.IsHeader;
     private bool isNormalRowColumn => !IsMaxColumn && !this.IsHeader;
+    private bool _isSortField => !string.IsNullOrWhiteSpace(this.SortField);
+    private bool _isCurrentSortField => this._listContext!.ListOptions.SortOptions.SortField?.Equals(this.SortField) ?? false;
     protected override List<string> UnwantedAttributes { get; set; } = new List<string>() { "class" };
+
+    [CascadingParameter(Name = "IsHeader")] public bool IsHeader { get; set; }
+ 
+    [CascadingParameter] private ListContext? _listContext { get; set; }
     
-    //protected override void OnInitialized()
-    //{
-    //    if (this._listContext is not null)
-    //        this.SortField = _listContext.SortOptions.SortField;
-    //}
+    [Parameter] public bool IsMaxColumn { get; set; }
+    
+    [Parameter] public string HeaderTitle { get; set; } = string.Empty;
+    
+    [Parameter] public bool IsHeaderNoWrap { get; set; }
+    
+    [Parameter] public bool NoWrap { get; set; }
+    
+    [Parameter] public string SortField { get; set; } = string.Empty;
 
-    //private void SortClick(MouseEventArgs e)
-    //{
-    //    SortOptions options = new();
+    private void SortClick(MouseEventArgs e)
+    {
+        if (this._listContext is null)
+            return;
 
-    //    if (this._listContext is null)
-    //        return;
+        SortOptions options = _isCurrentSortField
+            ?  new SortOptions { Descending = true, SortField = this._listContext.ListOptions.SortOptions.SortField }
+            : new SortOptions { Descending = false, SortField = this.SortField };
 
-    //    if (this._listContext.SortOptions.SortField.Equals(this.SortField))
-    //        options = new SortOptions { Descending = true, SortField = this._listContext.SortOptions.SortField };
-    //    else
-    //        options = new SortOptions { Descending = false, SortField = this.SortField };
-
-    //    this._listContext.SetSortState(options);
-    //}
+        this._listContext?.SetSortState(options);
+    }
 
     private string HeaderCss
         => CSSBuilder.Class()
@@ -54,12 +53,12 @@ public partial class UIListColumn : UIComponentBase
             .AddClass("text-nowrap", this.NoWrap)
             .Build();
 
-    //private string SortIconCss
-    //=> this._listContext?.SortOptions is null || !this._listContext.SortOptions.SortField.Equals(this.SortField)
-    //? UICssClasses.NotSortedClass
-    //: this._listContext.SortOptions.Descending
-    //    ? UICssClasses.AscendingClass
-    //    : UICssClasses.DescendingClass;
+    private string SortIconCss
+    => _listContext is null || !_isCurrentSortField
+        ? UICssClasses.NotSortedClass
+        : this._listContext.ListOptions.SortOptions.Descending
+            ? UICssClasses.AscendingClass
+            : UICssClasses.DescendingClass;
 
 }
 

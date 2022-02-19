@@ -35,7 +35,7 @@ public class WeatherForecastListService
     public async ValueTask<ItemsProviderResult<DvoWeatherForecast>> GetForecastsAsync(ItemsProviderRequest request)
     {
         var isfirstLoad = this.Records is null || this.Records.Count == 0;
-        var options = new ListOptions { PageSize = request.Count, StartRecord = request.StartIndex };
+        var options = new ListOptions { PageSize = request.Count, StartRecord = request.StartIndex};
 
         this.Records = await weatherForecastDataBroker!.GetWeatherForecastsAsync(Guid.NewGuid(), options);
         this.RecordCount = await weatherForecastDataBroker.GetWeatherForecastCountAsync(Guid.NewGuid());

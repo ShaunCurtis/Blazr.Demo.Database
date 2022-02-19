@@ -10,6 +10,7 @@ public partial class WeatherForecastListForm : ComponentBase
     private PagingControl? pagingControl;
     private IModalDialog? modalDialog;
     private bool _firstLoad;
+    private ListContext listContext = new ListContext();
 
     [CascadingParameter] public Task<AuthenticationState>? AuthTask { get; set; }
 
@@ -44,17 +45,15 @@ public partial class WeatherForecastListForm : ComponentBase
     private IClientAuthenticationService ClientAuthenticationService => _clientAuthenticationService!;
     private IAuthorizationService AuthorizationService => _authorizationService!;
     private UiStateService UiStateService => _uiStateService!;
-
-    public ListContext listContext = new ListContext();
     
     private bool isLoading => ListViewService.Records is null;
 
     private ComponentState loadState => isLoading ? ComponentState.Loading : ComponentState.Loaded;
 
     protected override void OnInitialized()
-    { 
+    {
+        listContext.ListOptions.SortExpression = "Date";
         _firstLoad = true;
-        this.listContext.Attach(_uiStateService, this.RouteId, this.GetPagedItems);
         this.NotificationService.RecordSetChanged += this.OnListChanged;
     }
 

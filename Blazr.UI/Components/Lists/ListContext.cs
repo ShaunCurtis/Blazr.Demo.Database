@@ -8,59 +8,86 @@ namespace Blazr.UI;
 
 public class ListContext
 {
-    private Guid _routeId = Guid.Empty;
-
-    public SortOptions SortOptions { get; private set; } = new SortOptions();
-
-    public ListOptions ListOptions { get; private set; } = new ListOptions();
-
-    public PagingOptions PagingOptions { get; private set; } = new PagingOptions();
-    
+    private Guid _stateId = Guid.Empty;
+    private bool _hasLoaded;
     private UiStateService? _uiStateService;
 
-    public Func<ListOptions, ValueTask<ListOptions>>? ListProvider { get; set; }
+    public readonly ListOptions ListOptions = new();
 
-    public bool HasStateService => _uiStateService != null; 
+    private Func<ListOptions, ValueTask<ListOptions>>? _listProvider { get; set; }
 
-    public void Attach(UiStateService? uiStateService, Guid routeId, Func<ListOptions, ValueTask<ListOptions>>? listProvider)
+    public event EventHandler<PagingEventArgs>? PagingReset; 
+
+    public ListContext() { }
+
+    public ListContext(ListOptions options)
+        => ListOptions.Load(options);
+
+    internal void Attach(UiStateService? uiStateService, Guid stateId, Func<ListOptions, ValueTask<ListOptions>>? listProvider)
     {
         _uiStateService = uiStateService;
-        _routeId = routeId;
-        this.ListProvider = listProvider;
+        _stateId = stateId;
+        _listProvider = listProvider;
+        _hasLoaded = false;
+
         if (_uiStateService is not null)
             this.GetState();
     }
 
-    public void SaveState()
+    public async ValueTask<PagingOptions> SetPage(PagingOptions pagingOptions)
     {
-        if (_routeId != Guid.Empty && _uiStateService is not null)
-            _uiStateService.AddStateData(_routeId, this.ListOptions);
-    }
-
-    public async ValueTask<PagingOptions> SetPagingState(PagingOptions pagingOptions)
-    {
-        this.ListOptions.StartRecord = pagingOptions.StartRecord;
-        this.ListOptions.PageSize = pagingOptions.PageSize;
-        if (ListProvider is not null)
+        var hasNoState = !this.GetState();
+        if (_hasLoaded || hasNoState)
         {
-            var returnOptions = await ListProvider(this.ListOptions);
+            this.ListOptions.StartRecord = pagingOptions.StartRecord;
+            this.ListOptions.PageSize = pagingOptions.PageSize;
+        }
+        if (_listProvider is not null)
+        {
+            var returnOptions = await _listProvider(this.ListOptions);
             if (returnOptions != null)
                 this.ListOptions.ListCount = returnOptions.ListCount;
         }
+        _hasLoaded = true;
         this.SaveState();
         return this.ListOptions.PagingOptions;
     }
 
-    public void SetSortState(SortOptions sortOptions)
+    public async ValueTask SetSortState(SortOptions sortOptions)
     {
+        var isPagingReset = !sortOptions.SortField?.Equals(this.ListOptions.SortOptions.SortField);
+
+        this.GetState();
+
+        // If we are sorting on a new field then we need to reset the page
+        if (isPagingReset ??= false)
+            this.ListOptions.StartRecord = 0;
+
         this.ListOptions.SortExpression = sortOptions.SortExpression;
+        if (_listProvider is not null)
+        {
+            var returnOptions = await _listProvider(this.ListOptions);
+            if (returnOptions != null)
+                this.ListOptions.ListCount = returnOptions.ListCount;
+        }
         this.SaveState();
+        if (isPagingReset ??= false )
+            PagingReset?.Invoke(this, new PagingEventArgs(ListOptions.PagingOptions));
     }
 
-    public ListOptions GetState()
+    private bool GetState()
     {
-        if (_routeId != Guid.Empty && _uiStateService is not null && _uiStateService.TryGetStateData(_routeId, out object stateOptions) && stateOptions is ListOptions)
-            this.ListOptions.Load(stateOptions as ListOptions);
-        return this.ListOptions;
+        if (_stateId != Guid.Empty && _uiStateService is not null && _uiStateService.TryGetStateData(_stateId, out object? stateOptions) && stateOptions is ListOptions)
+        {
+            this.ListOptions.Load((ListOptions)stateOptions);
+            return true;
+        }
+        return false;
+    }
+
+    private void SaveState()
+    {
+        if (_stateId != Guid.Empty && _uiStateService is not null)
+            _uiStateService.AddStateData(_stateId, this.ListOptions);
     }
 }

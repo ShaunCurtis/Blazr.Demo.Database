@@ -4,6 +4,7 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
+using System.Linq.Dynamic.Core;
 
 namespace Blazr.Demo.Database.Data
 {
@@ -104,7 +105,7 @@ namespace Blazr.Demo.Database.Data
         {
             var recs = GetForecastView()
                 .AsQueryable()
-                .OrderBy(item => item.Date)
+                .OrderBy(options.SortExpression ?? "Date")
                 .Skip(options.StartRecord)
                 .Take(options.PageSize)
                 .ToList();

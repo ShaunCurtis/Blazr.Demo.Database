@@ -7,7 +7,8 @@
 namespace Blazr.UI.Bootstrap;
 
 public partial class PagingControl
-    : ComponentBase
+    : ComponentBase,
+    IDisposable
 {
     private PagingOptions _pagingOptions => new PagingOptions() { PageSize = this.PageSize, StartRecord = this.ReadStartRecord };
     private int Page = 0;
@@ -25,16 +26,28 @@ public partial class PagingControl
 
     protected async override Task OnInitializedAsync()
     {
+        await this.SetPage();
+        if (this.ListContext is not null)
+            this.ListContext.PagingReset += this.OnPagingReset;
+    }
+
+    private async Task SetPage()
+    {
         PagingOptions options = new();
         if (this.ListContext is not null)
-            options = await this.ListContext.SetPagingState(_pagingOptions);
+            options = await this.ListContext.SetPage(_pagingOptions);
 
         else if (this.PagingProvider is not null)
             options = await PagingProvider(_pagingOptions);
 
         this.Page = options.Page;
-        this.PageSize = options.PageSize;
         this.ListCount = options.ListCount;
+    }
+
+    private void OnPagingReset(object? sender, PagingEventArgs e)
+    {
+        this.Page = e.PagingOptions.Page;
+        this.InvokeAsync(StateHasChanged);
     }
 
     public async void NotifyListChanged()
@@ -75,16 +88,7 @@ public partial class PagingControl
 
     private async Task GotToPage()
     {
-        PagingOptions options = new();
-        if (this.ListContext is not null)
-            options = await this.ListContext.SetPagingState(_pagingOptions);
-
-        else if (this.PagingProvider is not null)
-            options = await PagingProvider(_pagingOptions);
-
-        this.Page = options.Page;
-        this.PageSize = options.PageSize;
-        this.ListCount = options.ListCount;
+        await SetPage();
         this.StateHasChanged();
     }
 
@@ -105,4 +109,10 @@ public partial class PagingControl
 
     private async Task GoToBlock(int block)
         => await this.GotToPage(block * this.PageSize);
+
+    public void Dispose()
+    {
+        if (this.ListContext is not null)
+            this.ListContext.PagingReset -= this.OnPagingReset;
+    }
 }

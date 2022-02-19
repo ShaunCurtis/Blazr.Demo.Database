@@ -23,12 +23,12 @@ public class UiStateService
             _stateItems.Remove(Id);
     }
 
-    public bool TryGetStateData(Guid Id, out object value)
+    public bool TryGetStateData(Guid Id, out object? value)
     {
         var isdata = _stateItems.ContainsKey(Id);
         value = isdata
             ? _stateItems[Id]
-            : new ListOptions();
+            : null;
         return isdata;
     }
 }

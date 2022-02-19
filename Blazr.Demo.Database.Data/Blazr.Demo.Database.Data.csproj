@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.1" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="6.2.15" />
   </ItemGroup>
 
   <ItemGroup>
