@@ -4,8 +4,8 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-namespace Blazr.Demo.Database.Core
-{
+namespace Blazr.Demo.Database.Core;
+
     public record DcoWeatherForecast
     {
         public Guid WeatherForecastId { get; init; } = GuidExtensions.Null;
@@ -18,4 +18,4 @@ namespace Blazr.Demo.Database.Core
 
         public string Summary { get; init; } = String.Empty;
     }
-}
+

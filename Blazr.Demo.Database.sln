@@ -30,6 +30,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8E97D38B-3F68-4D72-B618-D2006D694DE4}"
 	ProjectSection(SolutionItems) = preProject
 		Bootstrap-Toaster.md = Bootstrap-Toaster.md
+		Data.md = Data.md
 		Implementing-Authorization.md = Implementing-Authorization.md
 		Simple-Authentication-Provider.md = Simple-Authentication-Provider.md
 		Simple-JWT-Authentication.md = Simple-JWT-Authentication.md
